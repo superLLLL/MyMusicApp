@@ -1,0 +1,115 @@
+<!--
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-18 15:56:00
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-19 18:18:44
+ -->
+<template>
+    <div class="recommend">
+        <div class="recommend-content">
+            <div v-if="recommends.length" class="slider-wrapper"> 
+
+                <!--以下为模块  slider-->
+                <slider>
+                    <div v-for="item in recommends">
+                        <a :href="item.linkUrl">
+                            <img :src="item.picUrl" alt="">
+                        </a>
+                    </div> 
+                </slider>
+            </div>
+            <div class="recommend-list">
+                <h1 class="list-title">热门歌单推荐</h1>
+                <ul>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import Slider from 'base/slider/slider'
+import {getRecommend} from 'api/recommend'
+import {ERR_OK} from 'api/config'   //语义化 不使用res.code == 0 
+export default {
+    data(){
+        return {
+            recommends:[]
+        }
+    },
+    created(){
+        this._getRecommend();
+    },
+    methods:{
+        /**此为get数据的异步过程，要在页面上添加一个 v-if="recommends.length"来确保能够在获得数据后再渲染页面 */
+        _getRecommend(){   //获得推荐页面数据
+            getRecommend().then((res) => {
+                if(res.code === ERR_OK){
+                    this.recommends = res.data.slider;
+                    // console.log(this.recommends);
+                }
+            })
+        }
+    },
+    components:{
+        Slider
+    }
+    
+};
+</script>
+
+<style lang="stylus" scoped rel="stylusheet/stylus">
+    @import '~common/stylus/variable'
+
+    .recommend 
+        position: fixed
+        width: 100%
+        top: 88px
+        bottom: 0
+        .recommend-content
+            height: 100%
+            overflow: hidden
+            .slider-wrapper
+                position: relative
+                width: 100%
+                overflow: hidden
+            .recommend-list
+                .list-title
+                    height: 65px
+                    line-height: 65px
+                    text-align: center
+                    font-size: $font-size-medium
+                    color: $color-theme
+                .item
+                    display: flex
+                    box-sizing: border-box
+                    align-items: center
+                    padding: 0 20px 20px 20px
+                    .icon
+                        flex: 0 0 60px
+                        width: 60px
+                        padding-right: 20px
+                    .text
+                        display: flex
+                        flex-direction: column
+                        justify-content: center
+                        flex: 1
+                        line-height: 20px
+                        overflow: hidden
+                        font-size: $font-size-medium
+                        .name
+                            margin-bottom: 10px
+                            color: $color-text
+                        .desc
+                            color: $color-text-d
+                .loading-container
+                    position: absolute
+                    width: 100%
+                    top: 50px
+                    transform: translateY(-50%)
+                        
+</style>
