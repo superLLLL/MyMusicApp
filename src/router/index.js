@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 18:35:17
+ * @LastEditTime: 2019-10-22 15:19:46
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -23,11 +23,11 @@ export default new Router({
       redirect: '/recommend'
     },
     {
-      path:'/recommend',
-      component:Recommend
+      path: '/recommend',
+      component: Recommend
     },
     {
-      path:'/rank',
+      path: '/rank',
       component: Rank
     },
     {

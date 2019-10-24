@@ -5,16 +5,17 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 19:45:10
+ * @LastEditTime: 2019-10-21 19:51:28
  */
 
- /*公共接口参数*/
+//  公共接口参数
 export const commonParams = {
-  g_tk: 1392026030,
+  g_tk: 5318,
   inCharset: 'utf-8',
   outCharset: 'utf-8',
   notice: 0,
-  format: 'jsonp'
+  format: 'jsonp',
+  uin: '1729792587'
 }
 
 export const options = {

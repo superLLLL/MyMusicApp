@@ -5,13 +5,15 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-20 19:53:18
+ * @LastEditTime: 2019-10-22 18:52:03
  -->
 
  <!--抽象Scroll组件-->
 <template>
-  <div ref="wrapper">
-    <slot></slot>
+  <div ref="wrapper" class="wrapper">
+    <slot>
+      
+    </slot>
   </div>
 </template>
 
@@ -21,7 +23,7 @@ export default {
   props: {
     probeType: {
       type: Number,
-      default: 1
+      default: 3
     },
     click: {
       type: Boolean,
@@ -37,6 +39,7 @@ export default {
       this._initScroll()
     }, 20);
   },
+
   methods: {
     _initScroll(){
       if (!this.$refs.wrapper){  //未初始化wrapper时，停止Scroll的初始化
@@ -46,15 +49,22 @@ export default {
         probeType: this.probeType,
         click: this.click
       })
+      console.log(this.scroll);
     },
     enable() {  //调用enable()方法
-      this.scroll && this.scroll.enable()   //如果this.scroll是有的，那么就调用scroll.enable()
+      this.scroll && this.scroll.enable()   //如果this.scroll存在并且enable()方法也有，那么就调用scroll.enable()
     },
     disable() {
       this.scroll && this.scroll.disable()
     },
     refresh() {
       this.scroll && this.scroll.refresh()
+    },
+    scrollTo() {
+      this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+    },
+    scrollToElement() {
+      this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     }
   },
   watch: {
@@ -68,5 +78,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-  
+  .wrapper
+    // overflow: hidden
+    // height: 100%
 </style>

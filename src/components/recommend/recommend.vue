@@ -5,58 +5,90 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-19 18:18:44
+ * @LastEditTime: 2019-10-22 13:23:30
  -->
 <template>
     <div class="recommend">
-        <div class="recommend-content">
-            <div v-if="recommends.length" class="slider-wrapper"> 
-
-                <!--以下为模块  slider-->
-                <slider>
-                    <div v-for="item in recommends">
-                        <a :href="item.linkUrl">
-                            <img :src="item.picUrl" alt="">
-                        </a>
-                    </div> 
-                </slider>
+        <scroll ref="scroll" class="recommend-content" :data='disclist'>
+           <div>    <!-- 需要包括起来 -->
+                <div v-if="recommends.length" class="slider-wrapper"> 
+                    <!--以下为模块  slider-->
+                    <slider>
+                        <div v-for="item in recommends">
+                            <a :href="item.linkUrl">
+                                <img :src="item.picUrl" alt="">
+                            </a>
+                        </div> 
+                    </slider>
+                </div>
+                <div class="recommend-list">
+                    <h1 class="list-title">热门歌单推荐</h1>
+                    <ul>
+                        <li class="item" v-for="item in disclist">
+                            <div class="icon">
+                                <img @load="loadImage()" width="60" height="60" v-lazy="item.imgurl">
+                            </div>
+                            <div class="text">
+                                <h2 class="name" v-html="item.creator.name"></h2>
+                                <p class="desc" v-html="item.dissname"></p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="recommend-list">
-                <h1 class="list-title">热门歌单推荐</h1>
-                <ul>
-
-                </ul>
+            <div class="loadingcontainer" v-show="!disclist.length">
+                <loading></loading>
             </div>
-        </div>
+        </scroll>
     </div>
 </template>
 
 <script>
+import Loading from 'base/loading/loading'
+import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
-import {getRecommend} from 'api/recommend'
+import {getRecommend, getDiscList} from 'api/recommend'
 import {ERR_OK} from 'api/config'   //语义化 不使用res.code == 0 
 export default {
     data(){
         return {
-            recommends:[]
+            recommends:[],
+            disclist: []
         }
-    },
+    }, 
     created(){
-        this._getRecommend();
-    },
+        this._getRecommend()
+        this._getDiscList()
+    },  
     methods:{
         /**此为get数据的异步过程，要在页面上添加一个 v-if="recommends.length"来确保能够在获得数据后再渲染页面 */
-        _getRecommend(){   //获得推荐页面数据
+        _getRecommend() {   //获得推荐页面数据
             getRecommend().then((res) => {
-                if(res.code === ERR_OK){
-                    this.recommends = res.data.slider;
+                if(res.code === ERR_OK) {
+                    this.recommends = res.data.slider;  
                     // console.log(this.recommends);
                 }
             })
+        },
+        _getDiscList() {   //获取歌单数据
+            getDiscList().then((res) => {
+                if(res.code === ERR_OK) {
+                    this.disclist = res.data.list
+                    // console.log(this.disclist);
+                }
+            })
+        },
+        loadImage() {
+            if(!this.checkImage) {
+                this.$refs.scroll.refresh();
+                this.checkImage = true
+            }
         }
     },
     components:{
-        Slider
+        Slider,
+        Scroll,
+        Loading
     }
     
 };
@@ -109,7 +141,8 @@ export default {
                 .loading-container
                     position: absolute
                     width: 100%
-                    top: 50px
+                    top: 50%
                     transform: translateY(-50%)
+                    
                         
 </style>
