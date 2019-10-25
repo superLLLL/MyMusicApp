@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-22 08:07:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-22 15:29:11
+ * @LastEditTime: 2019-10-24 15:31:29
  -->
 <template>
   <div class="singerlist">
@@ -13,7 +13,7 @@
       <div ref="listHeigth">
         <ul class="list-group" >
           <h2 class="list-group-title">热门推荐</h2>
-          <li v-for="group in data" class="list-group-item">
+          <li @click="selectItem(group)" v-for="group in data" class="list-group-item">
               <img v-lazy="group.avatar" class="avatar" alt="">
               <span class="name">{{group.items}}</span>
           </li>
@@ -34,6 +34,11 @@ export default {
             default: []
         }
     },
+    methods: {
+      selectItem(group) {   
+        this.$emit('select', group)// 上传被点击的歌手信息
+      }
+    },
     components: {
       Scroll
     }
@@ -43,7 +48,7 @@ export default {
 <style lang="stylus" scoped  rel="stylusheet/stylus">
     @import "~common/stylus/variable"
 
-.singerlist
+.singerlist   // 重点
   position: fixed
   width: 100%
   top: 88px

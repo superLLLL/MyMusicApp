@@ -5,10 +5,10 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-22 18:52:03
+ * @LastEditTime: 2019-10-24 14:54:27
  -->
 
- <!--抽象Scroll组件-->
+ <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
 <template>
   <div ref="wrapper" class="wrapper">
     <slot>
@@ -20,6 +20,7 @@
 <script>
 import BScroll from 'better-scroll'
 export default {
+  // 是否接收外部参数
   props: {
     probeType: {
       type: Number,
@@ -35,7 +36,7 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
+    setTimeout(() => {    // 页面初始化渲染
       this._initScroll()
     }, 20);
   },
@@ -49,7 +50,7 @@ export default {
         probeType: this.probeType,
         click: this.click
       })
-      console.log(this.scroll);
+      // console.log(this.scroll);
     },
     enable() {  //调用enable()方法
       this.scroll && this.scroll.enable()   //如果this.scroll存在并且enable()方法也有，那么就调用scroll.enable()

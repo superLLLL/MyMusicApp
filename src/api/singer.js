@@ -5,12 +5,12 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-22 13:39:57
+ * @LastEditTime: 2019-10-24 15:09:51
  */
 
-//  获取歌手名单
-import jsonp from 'common/js/jsonp'
-import { commonParams, options} from './config'
+//  获取歌手名单 使用代理
+// import jsonp from 'common/js/jsonp'
+import { commonParams } from './config'
 import axios from 'axios'
 
 export function getSingerList() {

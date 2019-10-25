@@ -1,19 +1,15 @@
-import {playMode} from 'common/js/config'
-import {loadSearch, loadPlay, loadFavorite} from 'common/js/cache'
-
+/*
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-24 16:04:51
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-24 16:29:38
+ */
+// vuex 状态
 const state = {
-  singer: {},
-  playing: false,
-  fullScreen: false,
-  playlist: [],
-  sequenceList: [],
-  mode: playMode.sequence,
-  currentIndex: -1,
-  disc: {},
-  topList: {},
-  searchHistory: loadSearch(),
-  playHistory: loadPlay(),
-  favoriteList: loadFavorite()
+  singer: {}
 }
 
 export default state

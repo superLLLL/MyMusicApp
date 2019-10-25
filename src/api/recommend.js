@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-20 20:19:54
+ * @LastEditTime: 2019-10-24 15:11:05
  */
 import jsonp from 'common/js/jsonp'
 import { commonParams, options } from './config'
@@ -27,7 +27,7 @@ export function getDiscList() {
   // const url = 'https://v1.itooi.cn/tencent/songList/category'
   const url = '/api/getDiscList'
 
-  const data = Object.assign({}, commonParams, {
+  const data = Object.assign({}, commonParams, {// 将所有的参数放入data
     platform: 'yqq',
     hostUin: 0,
     sin: 0,
@@ -41,6 +41,7 @@ export function getDiscList() {
 
   // return jsonp(url, data, options)
 
+  // Promise 请求
   return axios.get(url, {
     params: data
   }).then((res) => {
