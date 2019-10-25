@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:07:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 16:17:44
+ * @LastEditTime: 2019-10-25 10:16:41
  */
-// 对state做一些映射
+// 包装state的数据，可以去出去
 export const singer = state => state.singer

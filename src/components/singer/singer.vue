@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 19:53:03
+ * @LastEditTime: 2019-10-25 16:20:44
  -->
 
 <!--  singer作为state数据 -->
@@ -65,6 +65,7 @@ export default {
             list.forEach((value, index) => {
                 if(index < HOT_SINGER_LEN) {
                     map.hots.items.push({
+                        no: index,                  // 假no用来获取歌手详情
                         id: value.singer_id,        // 放歌手id
                         items: value.singer_name,   // 放歌手名字
                         avatar: value.singer_pic    // 放歌手头像/照片
@@ -73,7 +74,7 @@ export default {
             });
             return map.hots.items
         },
-        // 通过扩展运算符方式，调用mapMutations
+        // 通过扩展运算符方式将此对象混入到外部对象中，调用mapMutations
         ...mapMutations({
             // 把对mutation的修改去映射成方法
             setSinger: 'SET_SINGER'

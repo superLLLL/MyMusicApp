@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 15:30:23
+ * @LastEditTime: 2019-10-25 16:34:28
  -->
 <template>
     <transition name="slide">
@@ -16,8 +16,28 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import {getSingerDetail} from 'api/singer'
+import {ERR_OK} from 'api/config'
 export default {
-    
+    computed: {
+        ...mapGetters([
+            'singer'
+        ])
+    },
+    created() {
+        this._getDeatil()
+        
+    },
+    methods: {
+        _getDeatil() {
+            getSingerDetail(this.singer.no).then((res) => {
+                if(res.code === ERR_OK){
+                    console.log(res.singerSongList.data.songList);
+                }
+            })
+        }
+    }
 }
 </script>
 

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 16:54:03
+ * @LastEditTime: 2019-10-25 12:23:42
  */
 import 'babel-polyfill'
 import Vue from 'vue'
@@ -26,6 +26,8 @@ Vue.use(VueLazyLoad, {
 new Vue({
   el: '#app',
   render: h => h(App),
-  router,
-  store
+  store,
+  // 路由表一定要放在最下面
+  router
+
 })

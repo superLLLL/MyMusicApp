@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-21 19:10:43
+ * @LastEditTime: 2019-10-25 16:06:42
  */
 'use strict'
 const utils = require('./utils')
@@ -85,6 +85,23 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           console.log(e);
         })
       })
+
+      // 歌手详情代理请求
+      app.get('/api/getSingerDetail', function(req, res) {
+        let url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/n/yqq/singer/',
+            host: 'u.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e);
+        })
+      })
+      
     },
   },
   plugins: [
