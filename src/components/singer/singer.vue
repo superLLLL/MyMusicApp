@@ -5,21 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
-<<<<<<< HEAD
  * @LastEditTime: 2019-10-26 08:50:57
-=======
- * @LastEditTime: 2019-10-25 16:20:44
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
  -->
 
 <!--  singer作为state数据 -->
 <template>
     <div class="singer">
-<<<<<<< HEAD
         <list-view :data="singers" @select="selectSinger"></list-view>
-=======
-        <list-view :data="singer" @select="selectSinger"></list-view>
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
         <!-- 挂载子路由 -->
         <router-view></router-view>
     </div>
@@ -37,23 +29,15 @@ const HOT_SINGER_LEN = 10    // 需要数据的长度
 export default {
     data() {
         return {
-<<<<<<< HEAD
             singers: []
-=======
-            singer: []
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
         }
     },
     created() {
         this._getSingerList()
     },
     methods: {
-<<<<<<< HEAD
         // 获取listview传上来的数据(被点击的歌手的基础信息)，以跳转路由
         selectSinger(singer) {
-=======
-        selectSinger(singer) {   // 获取listview传上来的数据，以跳转路由
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
             // console.log(singer);
             this.$router.push({    // push编程式路由跳转
                 path: `/singer/${singer.id}`  
@@ -64,15 +48,9 @@ export default {
         _getSingerList() {     //获取歌手基础信息
             getSingerList().then((res) => {
                 if(res.code === ERR_OK){
-<<<<<<< HEAD
                     this.singers = res.singerList.data.singerlist
                     // console.log(res);
                     this.singers = this._normalizeSinger(this.singers);
-=======
-                    this.singer = res.singerList.data.singerlist
-                    // console.log(res);
-                    this.singer = this._normalizeSinger(this.singer);
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
                     // console.log(this.singer);
                     // console.log(res);
                 }
@@ -99,11 +77,7 @@ export default {
         },
         // 通过扩展运算符方式将此对象混入到外部对象中，调用mapMutations
         ...mapMutations({
-<<<<<<< HEAD
             // 把对mutation的修改映射成方法,此处为方法  SET_SINGER
-=======
-            // 把对mutation的修改去映射成方法
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
             setSinger: 'SET_SINGER'
         })
 

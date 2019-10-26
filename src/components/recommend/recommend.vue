@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-22 13:23:30
+ * @LastEditTime: 2019-10-26 14:27:36
  -->
 <template>
     <div class="recommend">
@@ -18,7 +18,7 @@
                             <a :href="item.linkUrl">
                                 <img :src="item.picUrl" alt="">
                             </a>
-                        </div> 
+                        </div>
                     </slider>
                 </div>
                 <div class="recommend-list">

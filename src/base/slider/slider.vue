@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-22 13:26:55
+ * @LastEditTime: 2019-10-26 14:17:47
  -->
 
 <!--推荐图片左右轮播图-->
@@ -14,6 +14,7 @@
   <div class="slider" ref="slider"> 
     <div class="slider-group" ref="sliderGroup">
       <slot >
+        
         <!--即将放入父组件的内容-->
       </slot>
     </div>

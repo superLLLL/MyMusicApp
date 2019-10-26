@@ -5,29 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
-<<<<<<< HEAD
- * @LastEditTime: 2019-10-25 18:04:25
- */
-
-//  获取歌手名单 使用代理
-// import jsonp from 'common/js/jsonp'
-import { commonParams } from './config'
-import axios from 'axios'
-=======
- * @LastEditTime: 2019-10-25 16:42:57
+ * @LastEditTime: 2019-10-26 13:54:42
  */
 
 //  获取歌手名单 使用代理
 import jsonp from 'common/js/jsonp'
 import { commonParams, options } from './config'
 import axios from 'axios'
-
-// 获取歌手菜单
-export function getSingerList() {
-  // const url = "https://c.y.qq.com/v8/fcg-bin/v8.fcg"
-  // const url = "/api/getSingerListTwo"
-  const url = '/api/getSingerList'
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
 
 // 获取歌手菜单
 export function getSingerList() {
@@ -43,11 +27,7 @@ export function getSingerList() {
     platform: 'yqq.json',
     notice: 0,
     needNewCode: 0,
-<<<<<<< HEAD
     data: little
-=======
-    data: {"comm":{"ct":24,"cv":0},"singerList":{"module":"Music.SingerListServer","method":"get_singer_list","param":{"area":-100,"sex":-100,"genre":-100,"index":-100,"sin":0,"cur_page":1}}}
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
   })
 
   return axios.get(url, {
@@ -102,18 +82,10 @@ export function getSingerDetail(SingerId) {
       data: `{"comm":{"ct":24,"cv":0},"singerSongList":{"method":"GetSingerSongList","param":{"order":1,"singerMid":"003Nz2So3XXYek","begin":0,"num":10},"module":"musichall.song_list_server"}}`
     }
   ]
-<<<<<<< HEAD
   const url = '/api/getSingerDetail'
   // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
   const data = Object.assign({}, commonParams, {
     '-': id[SingerId].info,
-=======
-  console.log(id[SingerId])
-  const url = '/api/getSingerDetail'
-  // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
-  const data = Object.assign({}, commonParams, {
-    "-": id[SingerId].info,
->>>>>>> 521b26706071557e651731d5b4a328293bce067c
     g_tk: 5381,
     loginUin: 0,
     hostUin: 0,
@@ -130,4 +102,39 @@ export function getSingerDetail(SingerId) {
   }).then((res) => {
     return Promise.resolve(res.data)
   })
+}
+
+// 获取歌曲的信息，v-key axios请求代理接口
+// export function getMusicKey(songMid) {
+//   const url = `/api/getMusicKey`
+//   const data = Object.assign({}, commonParams, {
+//     songmid: songMid,
+//     guid: 3110397877,
+//     fromtag: 38,
+//     uid: 2635,
+//     data: `{"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"9244517832","songmid":["001Qu4I30eVFYb"],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":24,"cv":0}}`
+//   })
+
+//   return axios.get(url, {
+//     params: data
+//   }).then((res) => {
+//     return Promise.resolve(res.data)
+//   })
+// }
+
+// h5版本qq音乐jsonp接口 v-key
+export function getMusicKey(songMid) {
+  const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
+  const data = Object.assign({}, {
+    loginUin: 3051522991,
+    format: 'jsonp',
+    platform: 'yqq',
+    needNewCode: 0,
+    cid: 205361747,
+    uin: 3051522991,
+    guid: 5931742855,
+    songmid: songMid,
+    filename: `C400${songMid}.m4a`
+  })
+  return jsonp(url, data, options)
 }

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 14:54:27
+ * @LastEditTime: 2019-10-26 15:02:02
  -->
 
  <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
@@ -52,19 +52,19 @@ export default {
       })
       // console.log(this.scroll);
     },
-    enable() {  //调用enable()方法
+    enable() {  // 启用 better-scroll, 默认 开启。
       this.scroll && this.scroll.enable()   //如果this.scroll存在并且enable()方法也有，那么就调用scroll.enable()
     },
-    disable() {
+    disable() { // 禁用 better-scroll，DOM 事件（如 touchstart、touchmove、touchend）的回调函数不再响应。
       this.scroll && this.scroll.disable()
     },
-    refresh() {
+    refresh() { // 重新计算 better-scroll，当 DOM 结构发生变化的时候务必要调用确保滚动的效果正常。
       this.scroll && this.scroll.refresh()
     },
-    scrollTo() {
+    scrollTo() { // 滚动到指定的位置
       this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
     },
-    scrollToElement() {
+    scrollToElement() { // 滚动到指定的目标元素。
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     }
   },
