@@ -5,7 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
+<<<<<<< HEAD
  * @LastEditTime: 2019-10-25 19:05:16
+=======
+ * @LastEditTime: 2019-10-25 16:34:28
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
  -->
 <template>
     <transition name="slide">
@@ -19,6 +23,7 @@
 import {mapGetters} from 'vuex'
 import {getSingerDetail} from 'api/singer'
 import {ERR_OK} from 'api/config'
+<<<<<<< HEAD
 import {createSong} from 'common/js/song'
 export default {
     data() {
@@ -26,6 +31,9 @@ export default {
             songs: []
         }
     },
+=======
+export default {
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
     computed: {
         ...mapGetters([
             'singer'
@@ -33,6 +41,7 @@ export default {
     },
     created() {
         this._getDeatil()
+<<<<<<< HEAD
     },
     methods: {
         _getDeatil() {
@@ -62,6 +71,17 @@ export default {
                 }
             })
             return ret
+=======
+        
+    },
+    methods: {
+        _getDeatil() {
+            getSingerDetail(this.singer.no).then((res) => {
+                if(res.code === ERR_OK){
+                    console.log(res.singerSongList.data.songList);
+                }
+            })
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
         }
     }
 }

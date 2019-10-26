@@ -5,6 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
+<<<<<<< HEAD
  * @LastEditTime: 2019-10-25 18:04:25
  */
 
@@ -12,6 +13,21 @@
 // import jsonp from 'common/js/jsonp'
 import { commonParams } from './config'
 import axios from 'axios'
+=======
+ * @LastEditTime: 2019-10-25 16:42:57
+ */
+
+//  获取歌手名单 使用代理
+import jsonp from 'common/js/jsonp'
+import { commonParams, options } from './config'
+import axios from 'axios'
+
+// 获取歌手菜单
+export function getSingerList() {
+  // const url = "https://c.y.qq.com/v8/fcg-bin/v8.fcg"
+  // const url = "/api/getSingerListTwo"
+  const url = '/api/getSingerList'
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
 
 // 获取歌手菜单
 export function getSingerList() {
@@ -27,7 +43,11 @@ export function getSingerList() {
     platform: 'yqq.json',
     notice: 0,
     needNewCode: 0,
+<<<<<<< HEAD
     data: little
+=======
+    data: {"comm":{"ct":24,"cv":0},"singerList":{"module":"Music.SingerListServer","method":"get_singer_list","param":{"area":-100,"sex":-100,"genre":-100,"index":-100,"sin":0,"cur_page":1}}}
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
   })
 
   return axios.get(url, {
@@ -82,10 +102,18 @@ export function getSingerDetail(SingerId) {
       data: `{"comm":{"ct":24,"cv":0},"singerSongList":{"method":"GetSingerSongList","param":{"order":1,"singerMid":"003Nz2So3XXYek","begin":0,"num":10},"module":"musichall.song_list_server"}}`
     }
   ]
+<<<<<<< HEAD
   const url = '/api/getSingerDetail'
   // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
   const data = Object.assign({}, commonParams, {
     '-': id[SingerId].info,
+=======
+  console.log(id[SingerId])
+  const url = '/api/getSingerDetail'
+  // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+  const data = Object.assign({}, commonParams, {
+    "-": id[SingerId].info,
+>>>>>>> 521b26706071557e651731d5b4a328293bce067c
     g_tk: 5381,
     loginUin: 0,
     hostUin: 0,
