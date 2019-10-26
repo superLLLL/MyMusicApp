@@ -5,20 +5,21 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 19:45:10
+ * @LastEditTime: 2019-10-24 14:52:08
  */
 
- /*公共接口参数*/
+//  qq音乐公共接口参数
 export const commonParams = {
-  g_tk: 1392026030,
+  g_tk: 5318,
   inCharset: 'utf-8',
   outCharset: 'utf-8',
   notice: 0,
-  format: 'jsonp'
+  format: 'jsonp',
+  uin: '1729792587'
 }
-
+// jsonp跨越用callback
 export const options = {
   param: 'jsonpCallback'
 }
-
+// 公共接口真正使用返回参数
 export const ERR_OK = 0

@@ -5,19 +5,19 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-19 18:40:09
+ * @LastEditTime: 2019-10-20 19:58:02
  */
-export function addClass(el, classname){
-  if(hasClass(el, classname)){
+export function addClass(el, classname) {
+  if (hasClass(el, classname)) {
     return
   }
-  /**打散classname 名，并加入新名*/
-  let nameList = el.className.split(' ')   
+ /*打散classname 名，并加入新名*/
+  let nameList = el.className.split(' ') 
   nameList.push(classname)
   el.className = nameList.join(' ')
 }
 
-export function hasClass(el, classname){
-  let reg = new RegExp('(^|\\s)'+classname+'(\\s|$)')
+export function hasClass(el, classname) {
+  let reg = new RegExp('(^|\\s)' + classname + '(\\s|$)')
   return reg.test(el.classname)
 }

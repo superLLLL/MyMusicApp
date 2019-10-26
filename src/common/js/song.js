@@ -1,8 +1,15 @@
-import {getLyric} from 'api/song'
-import {ERR_OK} from 'api/config'
-import {Base64} from 'js-base64'
+/*
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-25 18:11:19
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-25 18:55:05
+ */
 
-export default class Song {
+// 封装一个Song类
+export default class Song { // 创建一个Song对象
   constructor({id, mid, singer, name, album, duration, image, url}) {
     this.id = id
     this.mid = mid
@@ -13,46 +20,31 @@ export default class Song {
     this.image = image
     this.url = url
   }
-
-  getLyric() {
-    if (this.lyric) {
-      return Promise.resolve(this.lyric)
-    }
-
-    return new Promise((resolve, reject) => {
-      getLyric(this.mid).then((res) => {
-        if (res.retcode === ERR_OK) {
-          this.lyric = Base64.decode(res.lyric)
-          resolve(this.lyric)
-        } else {
-          reject('no lyric')
-        }
-      })
-    })
-  }
 }
-
+// 工厂方法就是不直接调用new，而是返回一个方法来创建对象
+// 扩展工厂方法创建实例, 以便方法复用   songid和ablum是必须要的
 export function createSong(musicData) {
-  return new Song({
-    id: musicData.songid,
-    mid: musicData.songmid,
-    singer: filterSinger(musicData.singer),
-    name: musicData.songname,
-    album: musicData.albumname,
-    duration: musicData.interval,
-    image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
+  return new Song({ // 抽象一层，代码更少
+    id: musicData.songInfo.ksong.id, // 歌的id
+    mid: musicData.songInfo.ksong.mid, // 歌的mid
+    singer: filterSinger(musicData.songInfo.singer), // 歌手名
+    name: musicData.songInfo, // 歌名
+    album: musicData.songInfo.album.name, // 专辑名
+    duration: musicData.songInfo.interval, // 歌曲时长
+    // 歌曲的相应图片是有规律的
+    image: `https: //y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.songInfo.album.mid}.jpg?max_age=2592000`,
+    url: `https://thirdparty.gtimg.com/${musicData.songInfo.ksong.id}.m4a?fromtag=38`
   })
 }
 
+// 取出singer名
 function filterSinger(singer) {
   let ret = []
   if (!singer) {
     return ''
   }
-  singer.forEach((s) => {
-    ret.push(s.name)
+  singer.forEach(element => {
+    ret.push(element.name)
   })
   return ret.join('/')
 }
-

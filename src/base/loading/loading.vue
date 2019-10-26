@@ -1,3 +1,12 @@
+<!--
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-19 09:28:44
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-21 13:17:57
+ -->
 <template>
   <div class="loading">
     <img width="24" height="24" src="./loading.gif">
@@ -9,7 +18,7 @@
     props: {
       title: {
         type: String,
-        default: '正在载入...'
+        default: "正在载入..."
       }
     }
   }

@@ -1,23 +1,11 @@
+/*
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-24 16:05:59
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-25 17:45:23
+ */
+// 存放mutations相关的字符串常量， 与mutations做关联
 export const SET_SINGER = 'SET_SINGER'
-
-export const SET_PLAYING_STATE = 'SET_PLAYING_STATE'
-
-export const SET_FULL_SCREEN = 'SET_FULL_SCREEN'
-
-export const SET_PLAYLIST = 'SET_PLAYLIST'
-
-export const SET_SEQUENCE_LIST = 'SET_SEQUENCE_LIST'
-
-export const SET_PLAY_MODE = 'SET_PLAY_MODE'
-
-export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
-
-export const SET_DISC = 'SET_DISC'
-
-export const SET_TOP_LIST = 'SET_TOP_LIST'
-
-export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY'
-
-export const SET_PLAY_HISTORY = 'SET_PLAY_HISTORY'
-
-export const SET_FAVORITE_LIST = 'SET_FAVORITE_LIST'

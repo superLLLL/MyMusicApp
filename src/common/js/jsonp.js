@@ -5,15 +5,14 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 20:28:14
+ * @LastEditTime: 2019-10-21 15:24:55
  */
 
- /*jsonp跨越请求 */ 
+// jsonp跨越请求
 import originJSONP from 'jsonp'
 
 export default function jsonp(url, data, option) {
-  //为url加上?，并连接data
-  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
+  url += (url.indexOf('?') < 0 ? '?' : '&') + param(data) // 为url加上?，并连接data
   return new Promise((resolve, reject) => {
     originJSONP(url, option, (err, data) => {
       if (err) {
@@ -25,11 +24,12 @@ export default function jsonp(url, data, option) {
   })
 }
 
-export function param(data){
+export function param(data) {
   let url = ''
   for (const key in data) {
     let value = data[key] !== undefined ? data[key] : ''
     url += `&${key}=${encodeURIComponent(value)}`
   }
-  return url ? url.substring(1) : ''   //去&字符或直接返回一个空值
+
+  return url ? url.substring(1) : '' // 去&字符或直接返回一个空值
 }

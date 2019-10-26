@@ -5,13 +5,16 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 16:34:21
+ * @LastEditTime: 2019-10-20 13:43:18
  -->
 <template>
   <div id="app">
     <m-header></m-header>
     <tab></tab>
-    <router-view></router-view>
+    <!--将DOM 缓存到内存中，在切换页面时就不会重新发起连接的请求-->
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 

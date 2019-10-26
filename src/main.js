@@ -5,20 +5,29 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 16:29:29
+ * @LastEditTime: 2019-10-25 12:23:42
  */
 import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
+import VueLazyLoad from 'vue-lazyload'
+import store from './store'
 
 import 'common/stylus/index.styl'
 
 fastclick.attach(document.body)// 取消原生点击300ms的延迟
+Vue.use(VueLazyLoad, {
+  loading: require('common/image/default.png') /** 此为默认未加载图片之前，显示的图片 */
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   render: h => h(App),
+  store,
+  // 路由表一定要放在最下面
   router
+
 })

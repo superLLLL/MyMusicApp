@@ -1,105 +1,85 @@
+<!--
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-18 10:17:47
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-24 14:54:27
+ -->
+
+ <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
 <template>
-  <div ref="wrapper">
-    <slot></slot>
+  <div ref="wrapper" class="wrapper">
+    <slot>
+      
+    </slot>
   </div>
 </template>
 
-<script type="text/ecmascript-6">
-  import BScroll from 'better-scroll'
-
-  export default {
-    props: {
-      probeType: {
-        type: Number,
-        default: 1
-      },
-      click: {
-        type: Boolean,
-        default: true
-      },
-      listenScroll: {
-        type: Boolean,
-        default: false
-      },
-      data: {
-        type: Array,
-        default: null
-      },
-      pullup: {
-        type: Boolean,
-        default: false
-      },
-      beforeScroll: {
-        type: Boolean,
-        default: false
-      },
-      refreshDelay: {
-        type: Number,
-        default: 20
-      }
+<script>
+import BScroll from 'better-scroll'
+export default {
+  // 是否接收外部参数
+  props: {
+    probeType: {
+      type: Number,
+      default: 3
     },
-    mounted() {
-      setTimeout(() => {
-        this._initScroll()
-      }, 20)
+    click: {
+      type: Boolean,
+      default: true
     },
-    methods: {
-      _initScroll() {
-        if (!this.$refs.wrapper) {
-          return
-        }
-        this.scroll = new BScroll(this.$refs.wrapper, {
-          probeType: this.probeType,
-          click: this.click
-        })
-
-        if (this.listenScroll) {
-          let me = this
-          this.scroll.on('scroll', (pos) => {
-            me.$emit('scroll', pos)
-          })
-        }
-
-        if (this.pullup) {
-          this.scroll.on('scrollEnd', () => {
-            if (this.scroll.y <= (this.scroll.maxScrollY + 50)) {
-              this.$emit('scrollToEnd')
-            }
-          })
-        }
-
-        if (this.beforeScroll) {
-          this.scroll.on('beforeScrollStart', () => {
-            this.$emit('beforeScroll')
-          })
-        }
-      },
-      disable() {
-        this.scroll && this.scroll.disable()
-      },
-      enable() {
-        this.scroll && this.scroll.enable()
-      },
-      refresh() {
-        this.scroll && this.scroll.refresh()
-      },
-      scrollTo() {
-        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
-      },
-      scrollToElement() {
-        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
-      }
-    },
-    watch: {
-      data() {
-        setTimeout(() => {
-          this.refresh()
-        }, this.refreshDelay)
-      }
+    data: {
+      type: Array,
+      default: null
     }
-  }
+  },
+  mounted() {
+    setTimeout(() => {    // 页面初始化渲染
+      this._initScroll()
+    }, 20);
+  },
+
+  methods: {
+    _initScroll(){
+      if (!this.$refs.wrapper){  //未初始化wrapper时，停止Scroll的初始化
+        return
+      }
+      this.scroll = new BScroll(this.$refs.wrapper, {
+        probeType: this.probeType,
+        click: this.click
+      })
+      // console.log(this.scroll);
+    },
+    enable() {  //调用enable()方法
+      this.scroll && this.scroll.enable()   //如果this.scroll存在并且enable()方法也有，那么就调用scroll.enable()
+    },
+    disable() {
+      this.scroll && this.scroll.disable()
+    },
+    refresh() {
+      this.scroll && this.scroll.refresh()
+    },
+    scrollTo() {
+      this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments)
+    },
+    scrollToElement() {
+      this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+    }
+  },
+  watch: {
+    data(){   //当data发生改变时，就调用refresh() 刷新组件内容
+      setTimeout(() => {
+        this.refresh()
+      }, 20);
+    }
+  },
+}
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
-
+<style lang="stylus" scoped>
+  .wrapper
+    // overflow: hidden
+    // height: 100%
 </style>
