@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-26 15:02:02
+ * @LastEditTime: 2019-10-27 13:36:18
  -->
 
  <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
@@ -33,6 +33,10 @@ export default {
     data: {
       type: Array,
       default: null
+    },
+    listenScroll: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -46,11 +50,17 @@ export default {
       if (!this.$refs.wrapper){  //未初始化wrapper时，停止Scroll的初始化
         return
       }
-      this.scroll = new BScroll(this.$refs.wrapper, {
+      this.scroll = new BScroll(this.$refs.wrapper, { //初始化better-scroll
         probeType: this.probeType,
         click: this.click
       })
-      // console.log(this.scroll);
+      
+      if (this.listenScroll) {  // 如果父组件正在实时监听当前scroll元素的值（即listenScroll为true时）,将
+        let me = this
+        this.scroll.on('scroll', (pos) => { // 绑定scroll事件，并准备将pos(滚动的实时坐标)传会父组件的scroll事件
+          me.$emit('scroll', pos)
+        })
+      }
     },
     enable() {  // 启用 better-scroll, 默认 开启。
       this.scroll && this.scroll.enable()   //如果this.scroll存在并且enable()方法也有，那么就调用scroll.enable()
