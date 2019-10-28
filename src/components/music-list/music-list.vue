@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-27 20:24:44
+ * @LastEditTime: 2019-10-28 15:23:23
  -->
 
  <!--将歌手详细页模块化-->
@@ -27,7 +27,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @select="selectItem" ></song-list>
       </div>
       <div class="loading-container" v-show="!songs.length">
         <loading></loading>
@@ -86,6 +86,9 @@
     },
     back() { // 返回上一页面
       this.$router.back()
+    },
+    selectItem(item, index) { // 从song-list子组件接收到的参数
+      console.log(item+ ' ' + index);
     }
   },
   watch: { // 在scrollY获取到值后，用其新值改变bg-layer的Y轴的位置

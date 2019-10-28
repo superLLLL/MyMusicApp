@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-20 13:43:18
+ * @LastEditTime: 2019-10-28 14:39:42
  -->
 <template>
   <div id="app">
@@ -15,16 +15,19 @@
     <keep-alive>
         <router-view></router-view>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 
 <script>
   import MHeader from 'components/m-header/m-header'
   import Tab from 'components/tab/tab'
+  import Player from 'components/player/player'
   export default {
     components: {
       MHeader,
-      Tab
+      Tab,
+      Player
     }
   }
 </script>

@@ -5,8 +5,16 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:07:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-25 17:45:16
+ * @LastEditTime: 2019-10-28 13:40:06
  */
 // 包装state的数据，可以去出去
 export const singer = state => state.singer
-export const test = state => state.test
+export const playing = state => state.playing
+export const fullScreen = state => state.fullScreen
+export const playList = state => state.playList
+export const sequenceList = state => state.sequenceList
+export const mode = state => state.mode
+export const currentIndex = state => state.currentIndex
+export const currentSong = (state) => { // 返回歌曲，如果没有就返回空
+  return state.playList[state.currentIndex] || {}
+}

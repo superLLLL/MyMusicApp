@@ -5,12 +5,12 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 21:49:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-27 09:28:38
+ * @LastEditTime: 2019-10-28 15:26:31
  -->
 <template>
   <div class="song-list">
     <ul>
-      <li v-for="song in songs" class="item">
+      <li v-for="(song, index) in songs" @click="selectItem(song, index)" class="item">
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -31,6 +31,9 @@ export default {
   methods: {
     getDesc(song) { // 抽象出方法获得歌手名和专辑名
       return `${song.singer}: ${song.album}`
+    },
+    selectItem(item, index) { // 向上派送事件select，内容包含被点击歌曲和下标
+      this.$emit('select', item, index)
     }
   },
 }

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-27 20:02:52
+ * @LastEditTime: 2019-10-28 12:50:40
  */
 export function addClass(el, classname) {
   if (hasClass(el, classname)) {
@@ -52,9 +52,9 @@ export function prefixStyle(style) { // 暴露方法
   }
 
   // 正则css属性转驼峰
-  style = style.replace(/-(\w)/g, ($1, $0) => {
-    return $1.toUpperCase()
-  }).replace('-', '')
+  style = style.replace(/-(\w)/g, ($0, $1) => {
+    return $1.toUpperCase() // 将匹配的第二个字符转换成大写，并返回从而代替正则表达式满足的字符串
+  })
   // 字符串的拼接
   return vendor + style.charAt(0).toUpperCase() + style.substr(1)
 }
