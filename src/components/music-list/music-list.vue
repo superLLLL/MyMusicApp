@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-28 15:23:23
+ * @LastEditTime: 2019-10-29 20:47:27
  -->
 
  <!--将歌手详细页模块化-->
@@ -29,8 +29,8 @@
       <div class="song-list-wrapper">
         <song-list :songs="songs" @select="selectItem" ></song-list>
       </div>
-      <div class="loading-container" v-show="!songs.length">
-        <loading></loading>
+      <div class="loadingcontainer" v-show="!songs.length">
+          <loading></loading>
       </div>
     </scroll>
   </div>
@@ -41,6 +41,7 @@
  import SongList from 'base/song-list/song-list'
  import {prefixStyle} from 'common/js/dom'
  import Loading from 'base/loading/loading'
+ import {mapActions} from 'vuex'
 
  const RESERVED_HEIGHT = 40 // 预留高度
  const transform = prefixStyle('transform') // 检测transform
@@ -88,8 +89,17 @@
       this.$router.back()
     },
     selectItem(item, index) { // 从song-list子组件接收到的参数
-      console.log(item+ ' ' + index);
-    }
+      // console.log(item+ ' ' + index);
+      this.selectPlay({   // 完成actions调用，将数据上传到state中
+        list: this.songs,
+        index
+      })
+      
+    },
+    ...mapActions([
+      // 通过mapActions语法糖包装成函数调用的方式
+      'selectPlay'
+    ])
   },
   watch: { // 在scrollY获取到值后，用其新值改变bg-layer的Y轴的位置
     scrollY(newY) { 

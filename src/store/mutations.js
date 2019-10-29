@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:05:38
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-28 13:48:24
+ * @LastEditTime: 2019-10-29 20:07:26
  */
 // 定义修改操作，mutation就是多个方法的集合
 import * as types from './mutation-types'
@@ -22,16 +22,16 @@ const mutations = {
   [types.SET_FULL_SCREEN](state, flag) {
     state.fullScreen = flag
   },
-  [types.SET_PLAYLIST](state, list) {
+  [types.SET_PLAY_LIST](state, list) {
     state.playList = list
   },
-  [types.SET_SEQUENCELIST](state, list) {
+  [types.SET_SEQUENCE_LIST](state, list) {
     state.sequenceList = list
   },
   [types.SET_MODE](state, mode) {
     state.mode = mode
   },
-  [types.SET_CURRENTINDEX](state, index) {
+  [types.SET_CURRENT_INDEX](state, index) {
     state.currentIndex = index
   }
 }

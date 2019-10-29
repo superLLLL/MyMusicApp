@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-26 14:27:36
+ * @LastEditTime: 2019-10-29 20:58:59
  -->
 <template>
     <div class="recommend">
@@ -14,7 +14,7 @@
                 <div v-if="recommends.length" class="slider-wrapper"> 
                     <!--以下为模块  slider-->
                     <slider>
-                        <div v-for="item in recommends">
+                        <div v-for='item in recommends'>
                             <a :href="item.linkUrl">
                                 <img :src="item.picUrl" alt="">
                             </a>
@@ -24,7 +24,7 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li class="item" v-for="item in disclist">
+                        <li class="item" v-for='item in disclist'>
                             <div class="icon">
                                 <img @load="loadImage()" width="60" height="60" v-lazy="item.imgurl">
                             </div>

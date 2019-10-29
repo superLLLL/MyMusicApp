@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-22 08:07:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 15:31:29
+ * @LastEditTime: 2019-10-29 20:58:35
  -->
 <template>
   <div class="singerlist">
@@ -13,11 +13,14 @@
       <div ref="listHeigth">
         <ul class="list-group" >
           <h2 class="list-group-title">热门推荐</h2>
-          <li @click="selectItem(group)" v-for="group in data" class="list-group-item">
+          <li @click='selectItem(group)' v-for='group in data' class="list-group-item">
               <img v-lazy="group.avatar" class="avatar" alt="">
               <span class="name">{{group.items}}</span>
           </li>
         </ul>
+      </div>
+      <div class="loadingcontainer" v-show="!data.length">
+          <loading></loading>
       </div>
     </scroll>
   </div>
@@ -26,6 +29,7 @@
 
 <script>
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 
 export default {
     props: {
@@ -40,8 +44,9 @@ export default {
       }
     },
     components: {
-      Scroll
-    }
+      Scroll,
+      Loading
+    },
 }
 </script>
 
