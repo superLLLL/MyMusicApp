@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-25 18:11:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-26 11:31:05
+ * @LastEditTime: 2019-10-30 14:42:16
  */
 
 // 封装一个Song类
@@ -36,7 +36,8 @@ export function createSong(musicData, songVkey) {
     // 歌曲播放地址：C400+musicData.songInfo.file.media_mid 还有一个重要的token数据 v-key
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.songInfo.album.mid}.jpg?max_age=2592000`,
     // url: `https://thirdparty.gtimg.com/${musicData.songInfo.ksong.id}.m4a?fromtag=38`
-    url: `http://aqqmusic.tc.qq.com/amobile.music.tc.qq.com/C400${musicData.songInfo.file.media_mid}.m4a?guid=3110397877&vkey=${songVkey}&uin=2635&fromtag=38`
+    // url: `http://aqqmusic.tc.qq.com/amobile.music.tc.qq.com/C400${musicData.songInfo.file.media_mid}.m4a?guid=3110397877&vkey=${songVkey}&uin=2635&fromtag=38`
+    url: `http://127.0.0.1:3000/music/${musicData.songInfo.file.media_mid}.m4a`
   })
 }
 

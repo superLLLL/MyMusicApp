@@ -5,12 +5,17 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-29 20:41:27
+ * @LastEditTime: 2019-10-30 15:23:51
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
   <div class="player" v-show="playList.length>0">
-    <transition name="normal">
+    <transition name="normal"
+                @enter="enter"
+                @after-enter="afterEnter"
+                @leave="leave"             
+                @after-leave="afterLeave"
+    >
       <div class="normal-player" v-show="fullScreen">
         <div class="background">
           <img width="100%" height="100%" :src='currentSong.image'>
@@ -19,12 +24,12 @@
           <div class="back" @click="Shrink">
             <i class="icon-back"></i>
           </div>
-          <h1 class="title">{{currentSong.singer}}</h1>
+          <h1 class="title" v-html="currentSong.singer"></h1>
           <h2 class="subtitle" v-html='currentSong.name'></h2>
         </div>
         <div class="middle">
           <div class="middle-l">
-            <div class="cd-wrapper">
+            <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd">
                 <img class="image" :src='currentSong.image'>
               </div>
@@ -40,7 +45,7 @@
               <i class="icon-prev"></i>
             </div>
             <div class="icon i-center">
-              <i class="icon-play"></i>
+              <i class="icon-play" @click="togglePlay"></i>
             </div>
             <div class="icon i-right">
               <i class="icon-next"></i>
@@ -53,12 +58,12 @@
       </div>
     </transition>
     <transition name="main">
-      <div class="mini-player" v-show="!fullScreen" @click="Open">
+      <div class="mini-player" v-show="!fullScreen"  @click="Open">
         <div class="icon">
           <img width="40" height="40" :src='currentSong.image'>
         </div>
         <div class="text">
-          <h2 class="name" >{{currentSong.singer}}</h2>
+          <h2 class="name" v-html="currentSong.singer"></h2>
           <p class="desc" v-html='currentSong.album'></p>
         </div>
         <div class="control">
@@ -68,17 +73,23 @@
         </div>
       </div> 
     </transition>
+    <audio :src="currentSong.url" ref="audio"></audio>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations} from 'vuex'
+import animations from 'create-keyframe-animation'
+import { prefixStyle } from 'common/js/dom'
+
+const transform = prefixStyle('transform')
 export default {
   computed: {
     ...mapGetters([
       'playList',
       'fullScreen',
-      'currentSong'
+      'currentSong',
+      'playing'
     ]),
   },
   methods: {
@@ -88,9 +99,79 @@ export default {
     Open() {  // 展开播放器
       this.setFullScreen(true)
     },
+    togglePlay() { // 更改播放状态
+      this.setPlaying(!this.playing) 
+    },
+    // 以下为transition的各时间段事件
+    enter(el, done) { // done 当执行到done时跳转到下一个事件
+      const {x, y, scale} = this._getPosAndScale()
+      let animation = {
+        0: {
+          transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
+        },
+        60: {
+          // 放大一点，在缩成正常
+          transform: `translate3d(0,0,0) scale(1.1)`
+        },
+        100: {
+          transform: `translate3d(0,0,0) scale(1)`
+        }
+      }
+
+      animations.registerAnimation({ // 注册动画
+        name: 'move',
+        animation,
+        presets: {
+          duration: 400,
+          easing: 'linear'
+        }
+      })
+
+      animations.runAnimation(this.$refs.cdWrapper, 'move', done) // 运行动画，并执行回调函数
+    },
+    afterEnter() {
+        animations.unregisterAnimation('move') // 注销动画
+        this.$refs.cdWrapper.style.animation = ''
+    },
+    leave(el, done) { // leave时的动画
+      this.$refs.cdWrapper.style.transition = 'all 0.4s'
+      const {x, y, scale} = this._getPosAndScale()
+      this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
+      this.$refs.cdWrapper.addEventListener('transitionend', done)
+    },
+    afterLeave() { // 一定要清空动画
+      this.$refs.cdWrapper.style.transition = ''
+      this.$refs.cdWrapper.style[transform] = ''
+    },
+    _getPosAndScale() {
+      // 图标的一些数据
+      const targetWidth = 40
+      const paddingLeft = 40 
+      const paddingBottom = 30
+      const paddingTop = 80
+      const width = window.innerWidth * 0.8 // 大图标的宽度=视口宽度 * 0.8 因为其宽度为80%
+      const scale = targetWidth / width // 获得比例
+      const x = -(window.innerWidth / 2 - paddingLeft)  // 大图标x
+      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom // 大图标y
+      return {x,y,scale}
+    },
     ...mapMutations({ // 映射出方法
-      setFullScreen : 'SET_FULL_SCREEN'
+      setFullScreen : 'SET_FULL_SCREEN', // 播放器状态
+      setPlaying: 'SET_PLAYING' // 播放器播放/暂停
     })
+  },
+  watch: {
+    currentSong() {
+      this.$nextTick(() => { // 将回调函数延迟到下一次DOM更新时调用
+        this.$refs.audio.play()
+      })
+    },
+    playing(newPlaying) { // 监视playing数据
+      const audio = this.$refs.audio
+      this.$nextTick(() => {
+        newPlaying ? audio.play() : audio.pause() // 三元设置audio的播放状态
+      })
+    }
   },
 }
 </script>

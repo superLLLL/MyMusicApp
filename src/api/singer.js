@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-26 13:54:42
+ * @LastEditTime: 2019-10-30 14:18:26
  */
 
 //  获取歌手名单 使用代理
@@ -136,5 +136,13 @@ export function getMusicKey(songMid) {
     songmid: songMid,
     filename: `C400${songMid}.m4a`
   })
+  return jsonp(url, data, options)
+}
+
+export function getLocalMusic(songMid) {
+  const url = 'http://localhost:3000/getLocalMusic'
+  const data = {
+    mid: '123'
+  }
   return jsonp(url, data, options)
 }
