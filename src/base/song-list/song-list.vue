@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 21:49:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-30 19:42:06
+ * @LastEditTime: 2019-11-01 10:58:09
  -->
 <template>
   <div class="song-list">
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getDesc(song) { // 抽象出方法获得歌手名和专辑名
-    console.log(this.songs);
+    // console.log(this.songs); 
       return `${song.singer}: ${song.album}`
     },
     selectItem(item, index) { // 向上（music-list）派送事件select，内容包含被点击歌曲和下标

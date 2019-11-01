@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-30 20:32:10
+ * @LastEditTime: 2019-11-01 20:17:21
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -41,6 +41,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{(format(currentTime))}}</span>
             <div class="progress-bar-wrapper">
+                <progress-bar :percent="getPercent()" @percentChange="OnProgressBarChange"></progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
@@ -89,6 +90,7 @@
 import { mapGetters, mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import ProgressBar from 'base/progress-bar/progress-bar'
 
 const transform = prefixStyle('transform')
 export default {
@@ -109,11 +111,11 @@ export default {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
     },
     ...mapGetters([
-      'playList',
-      'fullScreen',
-      'currentSong',
-      'playing',
-      'currentIndex'
+      'playList', // 播放列表
+      'fullScreen', // 播放的形式 全屏 or 缩小
+      'currentSong', // 歌曲的信息
+      'playing', // 播放状态
+      'currentIndex' // 歌曲的下标
     ]),
   },
   methods: {
@@ -173,17 +175,29 @@ export default {
     format(interval) { // 将数字转换成分秒的形式
       interval = interval | 0 // 向下取整 == Math.floor()
       let minute = interval / 60 | 0
-      let second = this._pad(interval % 60 | 0)
+      // let second = this._pad(interval % 60 | 0)
+      let second = (interval % 60 | 0).toString().padStart(2, '0') // es6的padStart方法
       return `${minute}:${second}`
     },
-    _pad(time, n =2){ // 为秒处补0 默认补足两位 ，默认补0
-      let t = time.toString().length 
-      while (t < n){
-        time = '0'+ time
-        t++
-      }
-      return time
+    getPercent() { // 将当前播放的比例时长传给progress-bar
+      if(this.currentTime && this.currentSong.duration)
+        return this.currentTime / this.currentSong.duration
     },
+    OnProgressBarChange(percent) { // 改变当前播放位置 
+      this.$refs.audio.currentTime = this.currentSong.duration * percent // audio的currentTime是一个可读可写的属性
+      if (!this.playing) { // 如果通过移动得到的位置且处于暂停状态，则播放
+        this.togglePlay()
+      }
+    },
+    // _pad(time, n =2){ // 为秒处补0 默认补足两位 ，默认补0
+    //   let t = time.toString().length 
+    //   while (t < n){
+    //     time = '0'+ time
+    //     t++
+    //   }
+    //   return time
+    // },
+    
     // 以下为transition的各时间段事件
     enter(el, done) { // done 当执行到done时跳转到下一个事件
       const {x, y, scale} = this._getPosAndScale()
@@ -256,6 +270,9 @@ export default {
       })
     }
   },
+  components:{
+    ProgressBar
+  }
 }
 </script>
 
@@ -411,6 +428,7 @@ export default {
               text-align: left
             &.time-r
               text-align: right
+              // flex布局grow：1  左右两侧用文字自动撑开，中间自适应
           .progress-bar-wrapper
             flex: 1
         .operators
