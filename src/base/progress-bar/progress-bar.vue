@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-01 10:58:48
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-01 20:11:31
+ * @LastEditTime: 2019-11-02 13:10:32
  -->
 <template>
   <div class="progress-bar" ref="progressBar" @click="progressChange">
@@ -39,6 +39,8 @@ export default {
     this.touch = {} // 需要一个值来实现在不同回调函数中共享数据
   },
   methods: {
+    // 有个小问题，移动位置问题？
+    
     progressTouchStart(e) { // 开始移动
       this.touch.initiated = true // 设置初始化标志
       this.touch.startX = e.touches[0].pageX // 获得起始X轴位置, 用于之后计算移动后的width
@@ -49,7 +51,7 @@ export default {
         return 
       }
       const resultX = e.touches[0].pageX - this.touch.startX // 获得有效的touchX轴偏移距离
-      const offsetWidth = Math.min(this.$refs.progressBar.clientWidth, Math.max(0, this.touch.left + resultX)) // 获得总的偏移位置
+      const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - progressBtnWidth, Math.max(0, this.touch.left + resultX)) // 获得总的偏移位置
       this._setWidth(offsetWidth) // 修改进度条的位置
     },
     progressTouchEnd() { // 移动结束
@@ -57,7 +59,11 @@ export default {
       this._triggerPercent()
     },
     progressChange(e) { // 点击修改播放位置
-      this._setWidth(e.offsetX) // 修改进度条位置
+      const rect = this.$refs.progressBar.getBoundingClientRect() // btn到进度条初始位置的偏移量
+      const offsetWidth = e.pageX - rect.left 
+      this._setWidth(offsetWidth)
+    // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
+      // this._setWidth(e.offsetX) // 修改进度条位置
       this._triggerPercent()    // 修改歌曲播放位置
     },
     _triggerPercent() { // 将移动后的进度条的比值 发送到player
@@ -65,8 +71,8 @@ export default {
       this.$emit('percentChange', percent)
     },
     _setWidth(offsetWidth) { // 函数封装 随着播放的时间的增加，进度条进度也增加
-      this.$refs.progress.style.width = `${offsetWidth}px`
-      this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px, 0, 0)`
+        this.$refs.progress.style.width = `${offsetWidth}px`
+        this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
     }
   },
   watch: {
@@ -96,6 +102,7 @@ export default {
         position: absolute 
         height: 100%
         background: $color-theme
+        // 固定小球位置
       .progress-btn-wrapper
         position: absolute 
         left: -8px

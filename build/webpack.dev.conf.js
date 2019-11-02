@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-25 16:06:42
+ * @LastEditTime: 2019-11-02 16:28:37
  */
 'use strict'
 const utils = require('./utils')
@@ -99,6 +99,60 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           res.json(response.data)
         }).catch((e) => {
           console.log(e);
+        })
+      })
+
+      // 歌曲信息请求代理
+      app.get('/api/getMusicKey', function (req, res) {
+        var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          var ret4 = response.data
+          if (typeof ret4 === 'string') {
+            var reg = /^\w+\(({[^()]+})\)$/
+            var matche = ret4.match(reg)
+            if (matche) {
+              ret4 = JSON.parse(matche[1])
+            }
+          }
+          res.json(ret4)
+        }).catch((e) => {
+          console.log(e)
+        })
+      }) 
+
+      // 歌词请求
+      app.get('/api/lyric', function(req, res) {
+        let url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+        // let url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            // referer: 'https://i.y.qq.com/v8/playsong.html?songmid=004dFFPd4JNv8q/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          // 防止返回的数据仍为jsonp
+          // var ret = response.data
+          // if (typeof ret === 'string') { // 如果返回的是string 即 jsonp 的数据
+          //   var reg = /^\w+\(({[^()]+)\)}$/ // 使用正则只取出有用的信息
+          //   var matches = ret.match(reg)
+          //   if (matches) {
+          //     ret = JSON.parse(matches[1])
+          //   }
+          // }
+          // res.json(ret)
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
         })
       })
       

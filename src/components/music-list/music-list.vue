@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-29 20:47:27
+ * @LastEditTime: 2019-11-02 14:12:48
  -->
 
  <!--将歌手详细页模块化-->
@@ -16,7 +16,7 @@
     </div>
     <h1 class="title" v-html="title" ></h1>
     <div class="bg-image" :style="bgStyle" ref="bgImg">
-      <div class="play-wrapper" v-show="songs.length>0" ref="playButton">
+      <div class="play-wrapper" v-show="songs.length>0" ref="playButton" @click="random">
         <div class="play">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
@@ -90,15 +90,20 @@
     },
     selectItem(item, index) { // 从song-list子组件接收到的参数
       // console.log(item+ ' ' + index);
-      this.selectPlay({   // 完成actions调用，将数据上传到state中
+      this.selectPlay({   // 完成actions调用，将数据上传到state中,播放歌曲由index控制
         list: this.songs,
         index
       })
-      
+    },
+    random() { // 随机播放歌曲
+      this.randomPlay({
+        list: this.songs
+      })
     },
     ...mapActions([
       // 通过mapActions语法糖包装成函数调用的方式
-      'selectPlay'
+      'selectPlay',
+      'randomPlay'
     ])
   },
   watch: { // 在scrollY获取到值后，用其新值改变bg-layer的Y轴的位置

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-30 19:41:35
+ * @LastEditTime: 2019-11-02 16:08:52
  -->
 
 <!--  singer作为state数据 -->
@@ -45,7 +45,7 @@ export default {
             // 调用之后，即实现了对mutation的提交
             this.setSinger(singer)
         },
-        _getSingerList() {     //获取歌手基础信息
+        _getSingerList() {     //获取热门歌手排行信息
             getSingerList().then((res) => {
                 if(res.code === ERR_OK){
                     this.singers = res.singerList.data.singerlist

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-01 20:17:21
+ * @LastEditTime: 2019-11-02 15:19:34
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -41,13 +41,13 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{(format(currentTime))}}</span>
             <div class="progress-bar-wrapper">
-                <progress-bar :percent="getPercent()" @percentChange="OnProgressBarChange"></progress-bar>
+                <progress-bar :percent="getPercent" @percentChange="OnProgressBarChange"></progress-bar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click.prevent="prev"></i>
@@ -75,14 +75,16 @@
           <p class="desc" v-html='currentSong.album'></p>
         </div>
         <div class="control">
-          <i :class="miniIcon" @click.stop="togglePlay"></i>
+          <progress-circle :radius="radius" :percent="getPercent">
+              <i :class="miniIcon" @click.stop="togglePlay" class="icon-mini"></i>
+          </progress-circle>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
       </div> 
     </transition>
-    <audio :src="currentSong.url" @canplay="canplay" @error="error" ref="audio" @timeupdate="getCurrentTime"></audio>
+    <audio :src="currentSong.url" @canplay="canplay" @error="error" ref="audio" @timeupdate="getCurrentTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -90,14 +92,18 @@
 import { mapGetters, mapMutations} from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
+import ProgressCircle from 'base/progress-circle/progress-circle'
 import ProgressBar from 'base/progress-bar/progress-bar'
+import { playMode } from 'common/js/config'
+import { shuffle } from 'common/js/util'
 
 const transform = prefixStyle('transform')
 export default {
   data() {
     return {
       isCanPlay: false, // 是否可以播放标志位
-      currentTime : 0  // 当前播放时间
+      currentTime : 0,  // 当前播放时间
+      radius: 32
     }
   },
   computed: {
@@ -110,12 +116,21 @@ export default {
     miniIcon() {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
     },
+    getPercent() { // 将当前播放的比例时长传给progress-bar
+      if(this.currentTime && this.currentSong.duration)
+        return this.currentTime / this.currentSong.duration
+    },
+    iconMode() { // 当前播放模式
+      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+    },
     ...mapGetters([
       'playList', // 播放列表
       'fullScreen', // 播放的形式 全屏 or 缩小
       'currentSong', // 歌曲的信息
       'playing', // 播放状态
-      'currentIndex' // 歌曲的下标
+      'currentIndex', // 歌曲的下标
+      'mode', // 歌曲播放模式
+      'sequenceList' // 歌曲的原始列表
     ]),
   },
   methods: {
@@ -145,7 +160,18 @@ export default {
       }
       this.isCanPlay = false // 当前歌曲加载完毕后，重新设为不可播放状态
     },
-    next() {  // 切换下一首歌
+    end() { // audio播放结束时
+      if (this.mode === playMode.loop) { // 如果时loop模式
+        this._loop()
+      } else { // 其他模式正常切换
+        this.next() 
+      }
+    }, 
+    _loop() { // loop模式的下一首歌
+      this.$refs.audio.currentTime = 0 // 将播放事件调整为0
+      this.$refs.audio.play() // 重新开始播放
+    },
+    next() {  // 其余模式的切换下一首歌
       if (!this.isCanPlay) {
         return
       }
@@ -179,15 +205,29 @@ export default {
       let second = (interval % 60 | 0).toString().padStart(2, '0') // es6的padStart方法
       return `${minute}:${second}`
     },
-    getPercent() { // 将当前播放的比例时长传给progress-bar
-      if(this.currentTime && this.currentSong.duration)
-        return this.currentTime / this.currentSong.duration
-    },
     OnProgressBarChange(percent) { // 改变当前播放位置 
       this.$refs.audio.currentTime = this.currentSong.duration * percent // audio的currentTime是一个可读可写的属性
       if (!this.playing) { // 如果通过移动得到的位置且处于暂停状态，则播放
         this.togglePlay()
       }
+    },
+    changeMode() {
+      const mode = (this.mode + 1) % 3 // 当前播放模式的下一种，一共3种
+      this.setMode(mode) // 改变当前播放模式
+      let list = null 
+      if (mode === playMode.random) { // 如果当前播放模式为随机
+        list = shuffle(this.sequenceList) // 将原始播放列表随机排序
+      } else { // 其他的情况下
+        list = this.sequenceList
+      }
+      this.resetCurrentSongIndex(list) // 修改改变列表后的歌曲下标
+      this.setPlayList(list) // 将当前模式相应的列表赋给播放列表
+    },
+    resetCurrentSongIndex(list) {
+      let index = list.findIndex((item) => { // 返回匹配下标
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index) // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
     },
     // _pad(time, n =2){ // 为秒处补0 默认补足两位 ，默认补0
     //   let t = time.toString().length 
@@ -254,13 +294,19 @@ export default {
     ...mapMutations({ // 映射出方法
       setFullScreen : 'SET_FULL_SCREEN', // 播放器状态
       setPlaying: 'SET_PLAYING', // 播放器播放/暂停
-      setCurrentIndex : 'SET_CURRENT_INDEX' // 当前播放歌曲的index
+      setCurrentIndex : 'SET_CURRENT_INDEX', // 当前播放歌曲的index
+      setMode : 'SET_MODE', // 歌曲的播放模式
+      setPlayList: 'SET_PLAY_LIST' // 修改当前歌曲的播放列表
     })
   },
   watch: {
-    currentSong() {
+    currentSong(newSong, oldSong) {
+      if (newSong.id === oldSong.id) { // 因为上面对下标做了改变，所以会触发watch；所以要对其回调函数设置新旧值的歌曲id是一样的则返回
+        return
+      }
       this.$nextTick(() => { // 将回调函数延迟到下一次DOM更新时调用
         this.$refs.audio.play()
+        this.currentSong.getLyric()
       })
     },
     playing(newPlaying) { // 监视playing数据
@@ -271,7 +317,8 @@ export default {
     }
   },
   components:{
-    ProgressBar
+    ProgressBar,
+    ProgressCircle
   }
 }
 </script>
@@ -514,6 +561,7 @@ export default {
         .icon-play-mini, .icon-pause-mini, .icon-playlist
           font-size: 30px
           color: $color-theme-d
+          // 将小的播放/暂停放入正确地方
         .icon-mini
           font-size: 32px
           position: absolute

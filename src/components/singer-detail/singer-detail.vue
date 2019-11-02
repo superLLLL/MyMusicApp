@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-30 14:27:19
+ * @LastEditTime: 2019-11-02 16:14:16
  -->
 <template>
     <transition name="slide">
@@ -52,7 +52,7 @@ export default {
             getSingerDetail(this.singer.no).then((res) => { // 获取歌手详细信息
                 if(res.code === ERR_OK){
                     // 调用_normalizeSongs方法获取歌曲信息
-                    // console.log(res);
+                    // console.log(res); 
                     this.songs = this._normalizeSongs(res.singerSongList.data.songList)
                     // console.log(this.songs);
                 }
