@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 15:45:14
+ * @LastEditTime: 2019-11-03 18:57:56
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -38,6 +38,9 @@
               <div class="cd" :class="cdCls">
                 <img class="image" :src='currentSong.image'>
               </div>
+            </div>
+            <div class="playing-lyric-wrapper">
+              <div class="playing-lyric">{{playingLyric}}</div>
             </div>
           </div>
           <!--scroll制作可滚动歌词，以currentLyric.lines为可滚动标准 currentLyric默认null：&& 是为了避免传入null-->
@@ -128,7 +131,8 @@ export default {
       radius: 32,       //svg的宽高度
       currentLyric: null,  // 当前歌曲的歌词
       currentLineNum: 0, // 当前歌词的下标
-      currentShow: 'cd'  // 当前显示的内容，默认cd
+      currentShow: 'cd',  // 当前显示的内容，默认cd
+      playingLyric: ''   // 在唱片页面上的歌词
     }
   },
   created() {
@@ -177,20 +181,6 @@ export default {
         this.currentLyric.togglePlay()
       }
     },
-    prev() { // 切换上一首歌
-      if (!this.isCanPlay) { // 播放标志位是否为可播放状态
-        return
-      }
-      let index = this.currentIndex - 1
-      if (index === -1) { // 如果超出下标
-        index = this.playList.length - 1 // 则为最后一首
-      }
-      this.setCurrentIndex(index)
-      if (!this.playing) {
-        this.togglePlay()
-      }
-      this.isCanPlay = false // 当前歌曲加载完毕后，重新设为不可播放状态
-    },
     end() { // audio播放结束时
       if (this.mode === playMode.loop) { // 如果时loop模式
         this._loop()
@@ -203,19 +193,41 @@ export default {
       this.$refs.audio.play() // 重新开始播放
       this.currentLyric.seek(0) // 歌词也偏移回到歌词开始的位置
     },
+    prev() { // 切换上一首歌
+      if (!this.isCanPlay) { // 播放标志位是否为可播放状态
+        return
+      }
+      if (this.playList.length === 1) { // 如果当前歌曲只有一个的时候
+        this._loop() // loop这个歌曲
+      } else {
+        let index = this.currentIndex - 1
+        if (index === -1) { // 如果超出下标
+          index = this.playList.length - 1 // 则为最后一首
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) {
+          this.togglePlay()
+        }
+        this.isCanPlay = false // 当前歌曲加载完毕后，重新设为不可播放状态
+      }
+    },
     next() {  // 其余模式的切换下一首歌
       if (!this.isCanPlay) {
         return
       }
-      let index = this.currentIndex + 1
-      if (index === this.playList.length) {
-        index = 0
+      if (this.playList.length === 1) { // 如果当前歌曲只有一个的时候
+        this._loop() // loop这个歌曲
+      } else {
+        let index = this.currentIndex + 1
+        if (index === this.playList.length) {
+          index = 0
+        }
+        this.setCurrentIndex(index)
+        if (!this.playing) { // 让切换的下一首歌，无论如何都是在播放的
+          this.togglePlay()
+        }
+        this.isCanPlay = false
       }
-      this.setCurrentIndex(index)
-      if (!this.playing) { // 让切换的下一首歌，无论如何都是在播放的
-        this.togglePlay()
-      }
-      this.isCanPlay = false
     },
     canplay() { // 当前歌曲可以正常播放时 相关标志位设为true
       this.isCanPlay = true
@@ -238,9 +250,13 @@ export default {
       return `${minute}:${second}`
     },
     OnProgressBarChange(percent) { // 改变当前播放位置 
-      this.$refs.audio.currentTime = this.currentSong.duration * percent // audio的currentTime是一个可读可写的属性
+      const currentTime = this.currentSong.duration * percent
+      this.$refs.audio.currentTime = currentTime // audio的currentTime是一个可读可写的属性
       if (!this.playing) { // 如果通过移动得到的位置且处于暂停状态，则播放
         this.togglePlay()
+      }
+      if (this.currentLyric) {
+        this.currentLyric.seek(currentTime * 1000) // 歌词跳转到当前歌曲播放时间的位置，单位ms
       }
     },
     changeMode() {
@@ -261,13 +277,17 @@ export default {
       })
       this.setCurrentIndex(index) // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
     },
-    getLyric() { // 返回的歌词函数
-      this.currentSong.getLyric().then((lyric) => {
+    getLyric() { // 返回的获取歌词的异步函数
+      this.currentSong.getLyric().then((lyric) => { 
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) { // 如果当前歌曲正在播放状态则播放歌词
           this.currentLyric.play()
         }
         console.log(this.currentLyric)
+      }).catch(() => { // 歌词获取出错，相关数据置空
+        this.currentLyric = null // 歌词对象
+        this.playingLyric = ''   // 当前正在playing的歌词
+        this.currentLineNum = 0  // 歌词下标
       })
     },
     handleLyric({lineNum, txt}) { // lyric的回调函数，返回当前的播放时间对应的歌词下标
@@ -279,6 +299,7 @@ export default {
       } else {
         this.$refs.lyricList.scrollTo(0, 0, 1000) // 回到顶部
       }
+      this.playingLyric = txt // 直接获得当前播放时间的歌词
     },
     middleTouchStart(e) { // 移动开始，将起始点信息保存
       this.touch.initiated = true // 初始化标志 
@@ -412,10 +433,11 @@ export default {
       if (this.currentLyric) { // 在重新new currentLyric之前先把 当前的currentLyric停止
         this.currentLyric.stop()
       }
-      this.$nextTick(() => { // 将回调函数延迟到下一次DOM更新时调用
+      // 使用setTimeout保证从后台切换到前台时，能够正常播放
+      setTimeout(() => { // 将回调函数延迟到下一次DOM更新时调用
         this.$refs.audio.play()
         this.getLyric()
-      })
+      },1000)
     },
     playing(newPlaying) { // 监视playing数据
       const audio = this.$refs.audio
@@ -528,9 +550,10 @@ export default {
             overflow: hidden
             text-align: center
             .playing-lyric
+              opacity: 0.6
               height: 20px
               line-height: 20px
-              font-size: $font-size-medium
+              font-size: $font-size-medium-x
               color: $color-text-l
         .middle-r
           display: inline-block
