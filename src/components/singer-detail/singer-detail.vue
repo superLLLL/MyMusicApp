@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 16:14:16
+ * @LastEditTime: 2019-11-02 22:06:53
  -->
 <template>
     <transition name="slide">
@@ -64,7 +64,7 @@ export default {
                 // console.log(element);
                 let musicData = element
                 // 保证必须的参数歌曲名和歌曲编号都存在，才会创建对象
-                if(musicData.songInfo.ksong.id && musicData.songInfo.file.media_mid) {
+                if (musicData.songInfo.ksong.id && musicData.songInfo.file.media_mid) {
                     // 将未处理的数据进行抽象处理
                     ret.push(createSong(musicData))
                 }

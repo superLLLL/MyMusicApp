@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-25 18:11:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 16:23:26
+ * @LastEditTime: 2019-11-02 21:24:17
  */
 
 // 封装一个Song类
@@ -25,13 +25,18 @@ export default class Song { // 创建一个Song对象
     this.url = url
   }
   getLyric() { // 将获取歌词方法封装在song中，不在构造函数中，而是作为公共方法
-    getLyric(this.mid).then((res) => {
-      // console.log(this.mid)
-      // console.log(res)
-      if (res.retcode === ERR_OK) {
-        this.lyric = Base64.decode(res.lyric) // Base64解析json数据
-        console.log(this.lyric)
-      }
+    if (this.lyric) { // 如果有歌词的就不在重新请求了，返回promise对象
+      return Promise().resolve(this.lyric) // getLyrc本身就返回的是promise所以这个函数的返回值都要是promise
+    }
+    return new Promise((resolve, reject) => { // getLric就是个异步回调，所以也要promise
+      getLyric(this.mid).then((res) => {
+        if (res.retcode === ERR_OK) {
+          this.lyric = Base64.decode(res.lyric) // Base64解析json数据
+          resolve(this.lyric)
+        } else {
+          reject('no lyric')
+        }
+      })
     })
   }
 }

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 16:08:52
+ * @LastEditTime: 2019-11-02 21:49:46
  -->
 
 <!--  singer作为state数据 -->
@@ -40,7 +40,7 @@ export default {
         selectSinger(singer) {
             // console.log(singer);
             this.$router.push({    // push编程式路由跳转
-                path: `/singer/${singer.id}`  
+                path: `/singer/${singer.id}`
             })
             // 调用之后，即实现了对mutation的提交
             this.setSinger(singer)

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 14:12:48
+ * @LastEditTime: 2019-11-02 22:25:25
  -->
 
  <!--将歌手详细页模块化-->
@@ -82,7 +82,7 @@
      this.$refs.list.$el.style.top = `${this.imageHeight}px`
    },
    methods: {
-    scroll(pos) { // 在滚动时时，实时地从scroll子组件中拿值给scrollY赋值
+    scroll(pos) { // 在滚动时，实时地从scroll子组件中拿值给scrollY赋值
         this.scrollY = pos.y 
     },
     back() { // 返回上一页面
@@ -139,7 +139,7 @@
       }
       // 统一修改
       this.$refs.bgImg.style.zIndex = zIndex
-      this.$refs.bgImg.style[transform] = `scale(${scale})`
+      this.$refs.bgImg.style[transform] = `scale(${scale})` // 比例缩放和放大
     }
    },
    components: {

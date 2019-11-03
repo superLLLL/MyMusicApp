@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 15:19:34
+ * @LastEditTime: 2019-11-03 15:45:14
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -28,16 +28,35 @@
           <h1 class="title" v-html="currentSong.singer"></h1>
           <h2 class="subtitle" v-html='currentSong.name'></h2>
         </div>
-        <div class="middle">
-          <div class="middle-l">
+        <div class="middle"
+          @touchstart.prevent="middleTouchStart"
+          @touchmove.prevent="middleTouchMove"
+          @touchend="middleTouchEnd"
+        >
+          <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" :class="cdCls">
                 <img class="image" :src='currentSong.image'>
               </div>
             </div>
           </div>
+          <!--scroll制作可滚动歌词，以currentLyric.lines为可滚动标准 currentLyric默认null：&& 是为了避免传入null-->
+          <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
+            <div class="lyric-wrapper">
+              <div v-if="currentLyric">
+                <p ref="lyricLine"
+                    class="text"
+                    :class="{'current' : currentLineNum === index}"
+                    v-for="(line, index) in currentLyric.lines">{{line.txt}}</p>
+              </div>
+            </div>
+          </scroll>
         </div>
         <div class="bottom">
+          <div class="dot-wrapper">
+            <span class="dot" :class="{'active' : currentShow == 'cd'}"></span>
+            <span class="dot" :class="{'active' : currentShow == 'lyric'}"></span>
+          </div>
           <div class="progress-wrapper">
             <span class="time time-l">{{(format(currentTime))}}</span>
             <div class="progress-bar-wrapper">
@@ -96,15 +115,24 @@ import ProgressCircle from 'base/progress-circle/progress-circle'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
+import Lyric from 'lyric-parser'
+import Scroll from 'base/scroll/scroll'
 
 const transform = prefixStyle('transform')
+const transitionDuration = prefixStyle('transitionDuration')
 export default {
   data() {
     return {
       isCanPlay: false, // 是否可以播放标志位
       currentTime : 0,  // 当前播放时间
-      radius: 32
+      radius: 32,       //svg的宽高度
+      currentLyric: null,  // 当前歌曲的歌词
+      currentLineNum: 0, // 当前歌词的下标
+      currentShow: 'cd'  // 当前显示的内容，默认cd
     }
+  },
+  created() {
+    this.touch = {} // 移动事件共享数据
   },
   computed: {
     cdCls() {
@@ -145,6 +173,9 @@ export default {
         return
       }
       this.setPlaying(!this.playing) 
+      if (this.currentLyric) { // 当歌曲暂停/播放时，歌词也暂停/播放
+        this.currentLyric.togglePlay()
+      }
     },
     prev() { // 切换上一首歌
       if (!this.isCanPlay) { // 播放标志位是否为可播放状态
@@ -170,6 +201,7 @@ export default {
     _loop() { // loop模式的下一首歌
       this.$refs.audio.currentTime = 0 // 将播放事件调整为0
       this.$refs.audio.play() // 重新开始播放
+      this.currentLyric.seek(0) // 歌词也偏移回到歌词开始的位置
     },
     next() {  // 其余模式的切换下一首歌
       if (!this.isCanPlay) {
@@ -228,6 +260,79 @@ export default {
         return item.id === this.currentSong.id
       })
       this.setCurrentIndex(index) // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
+    },
+    getLyric() { // 返回的歌词函数
+      this.currentSong.getLyric().then((lyric) => {
+        this.currentLyric = new Lyric(lyric, this.handleLyric)
+        if (this.playing) { // 如果当前歌曲正在播放状态则播放歌词
+          this.currentLyric.play()
+        }
+        console.log(this.currentLyric)
+      })
+    },
+    handleLyric({lineNum, txt}) { // lyric的回调函数，返回当前的播放时间对应的歌词下标
+      this.currentLineNum = lineNum
+      // 歌词滚动
+      if (lineNum > 5) {
+        let eltnum = this.$refs.lyricLine[lineNum - 5] // 获取当前5以后开始的元素（6~n）
+        this.$refs.lyricList.scrollToElement(eltnum, 1000) // 跳转到相应的element
+      } else {
+        this.$refs.lyricList.scrollTo(0, 0, 1000) // 回到顶部
+      }
+    },
+    middleTouchStart(e) { // 移动开始，将起始点信息保存
+      this.touch.initiated = true // 初始化标志 
+      let touche = e.touches[0]
+      this.touch.startX = touche.pageX // X轴坐标
+      this.touch.startY = touche.pageY // Y轴坐标
+
+    },
+    middleTouchMove(e) { // 移动阶段，获得偏移量，完成偏移
+      if (!this.touch.initiated) { //检测是否初始化
+          return
+      }
+      let touche = e.touches[0] 
+      const resultX = touche.pageX - this.touch.startX // X轴偏移量
+      const resultY = touche.pageY - this.touch.startY // Y轴偏移量
+      if (Math.abs(resultY) > Math.abs(resultX)) { // 当纵向移动时，不予提供切换交互
+        return
+      }
+      const left = this.currentShow === 'cd' ? 0 : -window.innerWidth // left的偏移量要么是0， 要么是负的window的宽度，两种状态
+      // 首先，我们只有能取到最大为0的width，然后我们可以取到最小不能超出屏幕的innerwidth, 根据left值加上resultX得出当前宽度；当我们从一开始左划时，left为0，所以这时left+resultX是最大的，当滑动到最后了，currentShow为‘lyric’时，left为-window.innerWidth，则此时-window.innerWidth最大
+      const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + resultX))
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth) // 获得当前偏移比例
+      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)` // lyricList是一个Scorll的vue组件是访问不到DOM，只能通过$el访问
+      this.$refs.lyricList.$el.style[transitionDuration] = '0ms'
+      this.$refs.middleL.style.opacity = 1 - this.touch.percent // 透明度根据当前偏移量来动态设置
+      this.$refs.middleL.style[transitionDuration] = '0ms'
+    },
+    middleTouchEnd() { // 滑动结束，完成切换
+      let offsetWidth
+      let opacity
+      if (this.currentShow === 'cd') { // 当页面为唱片时 从右向左划
+        if (this.touch.percent > 0.1) { // 滑动了超过10%时
+          opacity = 0
+          offsetWidth = -window.innerWidth
+          this.currentShow = 'lyric'
+        } else {
+          opacity = 1
+          offsetWidth = 0
+        }
+      } else {  // 当页面为歌词时 从左向右划
+        if (this.touch.percent < 0.9) { // 滑动超过了90%, 实际上原本是100%，也就是滑动超过10%了再切换回唱片
+          opacity = 1
+          offsetWidth = 0
+          this.currentShow = 'cd'
+        } else {
+          opacity = 0
+          offsetWidth = -window.innerWidth
+        }
+      }
+      const time = 300
+      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)` // 切换
+      this.$refs.lyricList.$el.style[transitionDuration] = `${time}ms`
+      this.$refs.middleL.style.opacity = opacity
+      this.$refs.middleL.style[transitionDuration] = `${time}ms`
     },
     // _pad(time, n =2){ // 为秒处补0 默认补足两位 ，默认补0
     //   let t = time.toString().length 
@@ -304,9 +409,12 @@ export default {
       if (newSong.id === oldSong.id) { // 因为上面对下标做了改变，所以会触发watch；所以要对其回调函数设置新旧值的歌曲id是一样的则返回
         return
       }
+      if (this.currentLyric) { // 在重新new currentLyric之前先把 当前的currentLyric停止
+        this.currentLyric.stop()
+      }
       this.$nextTick(() => { // 将回调函数延迟到下一次DOM更新时调用
         this.$refs.audio.play()
-        this.currentSong.getLyric()
+        this.getLyric()
       })
     },
     playing(newPlaying) { // 监视playing数据
@@ -318,7 +426,8 @@ export default {
   },
   components:{
     ProgressBar,
-    ProgressCircle
+    ProgressCircle,
+    Scroll
   }
 }
 </script>
@@ -425,6 +534,8 @@ export default {
               color: $color-text-l
         .middle-r
           display: inline-block
+          // display: inline-flex
+          white-space: pre-wrap
           vertical-align: top
           width: 100%
           height: 100%
@@ -439,22 +550,26 @@ export default {
               color: $color-text-l
               font-size: $font-size-medium
               &.current
+                font-size: $font-size-large-x
                 color: $color-text
       .bottom
         position: absolute
         bottom: 50px
         width: 100%
         .dot-wrapper
+          // 行内文本水平居中
           text-align: center
           font-size: 0
           .dot
             display: inline-block
+            // 行内元素垂直居中
             vertical-align: middle
             margin: 0 4px
             width: 8px
             height: 8px
             border-radius: 50%
             background: $color-text-l
+            // 当前被访问状态css
             &.active
               width: 20px
               border-radius: 5px
