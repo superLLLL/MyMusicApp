@@ -5,11 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-10-22 08:07:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-29 20:58:35
+ * @LastEditTime: 2019-11-03 20:39:45
  -->
 <template>
   <div class="singerlist">
-    <scroll class="listview" :data="data" ref="scroll">
+    <scroll class="listview" :data="data" ref="listview">
       <div ref="listHeigth">
         <ul class="list-group" >
           <h2 class="list-group-title">热门推荐</h2>
@@ -41,6 +41,9 @@ export default {
     methods: {
       selectItem(group) {   
         this.$emit('select', group)// 上传被点击的歌手信息
+      },
+      refresh() { // 将refresh方法暴露出去
+        return this.$refs.listview.refresh()
       }
     },
     components: {

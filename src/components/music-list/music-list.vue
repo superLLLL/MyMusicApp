@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 22:25:25
+ * @LastEditTime: 2019-11-03 19:42:42
  -->
 
  <!--将歌手详细页模块化-->
@@ -42,11 +42,13 @@
  import {prefixStyle} from 'common/js/dom'
  import Loading from 'base/loading/loading'
  import {mapActions} from 'vuex'
+ import {playListMixin} from 'common/js/mixin'
 
  const RESERVED_HEIGHT = 40 // 预留高度
  const transform = prefixStyle('transform') // 检测transform
  const backdropFilter = prefixStyle('backdrop-filter') // 检测backdrop-filter
  export default {
+   mixins: [playListMixin], // mixins导入相同逻辑的js代码
    props: {
       songs: {
         type: Array,
@@ -82,6 +84,11 @@
      this.$refs.list.$el.style.top = `${this.imageHeight}px`
    },
    methods: {
+    handlePlayList(playList) {
+      const bottom = playList.length > 0 ? `60px` : `0px` // 如果滚动有滚动内容，则为其添加60的bottom
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh() // 获得到bottom后调用scroll中的refresh()方法，让scroll重新计算
+    },
     scroll(pos) { // 在滚动时，实时地从scroll子组件中拿值给scrollY赋值
         this.scrollY = pos.y 
     },

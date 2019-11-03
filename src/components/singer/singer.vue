@@ -5,13 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 21:49:46
+ * @LastEditTime: 2019-11-03 20:42:13
  -->
 
 <!--  singer作为state数据 -->
 <template>
-    <div class="singer">
-        <list-view :data="singers" @select="selectSinger"></list-view>
+    <div class="singer" ref="singer">
+        <list-view :data="singers" @select="selectSinger" ref="list"></list-view>
         <!-- 挂载子路由 -->
         <router-view></router-view>
     </div>
@@ -23,10 +23,12 @@ import {ERR_OK} from 'api/config'   // qq音乐公共接口正常连接返回的
 import ListView from 'base/listview/listview'
 // vuex语法糖：是对mutations做一层封装
 import {mapMutations} from 'vuex'
+import {playListMixin} from 'common/js/mixin'
 
 const HOT_NAME = '热门'      // 固定标题名 热门
 const HOT_SINGER_LEN = 10    // 需要数据的长度
 export default {
+    mixins: [playListMixin],
     data() {
         return {
             singers: []
@@ -36,6 +38,14 @@ export default {
         this._getSingerList()
     },
     methods: {
+        // 改变scorll的bottom以免挡住mini播放器
+        handlePlayList(playList) { // 重写mixins中的方法
+            const bottom = playList.length > 0 ? '60px' : ''
+            this.$refs.list.$el.style.bottom = bottom
+            // console.log(this.$refs.singer.style.bottom);
+            // listview暴露上来的方法
+            this.$refs.list.refresh()
+        },
         // 获取listview传上来的数据(被点击的歌手的基础信息)，以跳转路由
         selectSinger(singer) {
             // console.log(singer);

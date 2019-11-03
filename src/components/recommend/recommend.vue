@@ -5,10 +5,10 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-29 20:58:59
+ * @LastEditTime: 2019-11-03 20:26:34
  -->
 <template>
-    <div class="recommend">
+    <div class="recommend" ref="recommend">
         <scroll ref="scroll" class="recommend-content" :data='disclist'>
            <div>    <!-- 需要包括起来 -->
                 <div v-if="recommends.length" class="slider-wrapper"> 
@@ -49,7 +49,10 @@ import Scroll from 'base/scroll/scroll'
 import Slider from 'base/slider/slider'
 import {getRecommend, getDiscList} from 'api/recommend'
 import {ERR_OK} from 'api/config'   //语义化 不使用res.code == 0 
+import {playListMixin} from 'common/js/mixin'
+
 export default {
+    mixins: [playListMixin],
     data(){
         return {
             recommends:[],
@@ -83,7 +86,14 @@ export default {
                 this.$refs.scroll.refresh();
                 this.checkImage = true
             }
-        }
+        },
+        // 改变scorll的bottom以免挡住mini播放器
+        handlePlayList(playList) { // 重写mixins中的方法
+            const bottom = playList.length > 0 ? '60px' : ''
+            this.$refs.recommend.style.bottom = bottom
+            // listview暴露上来的方法
+            this.$refs.scroll.refresh()
+        },
     },
     components:{
         Slider,
