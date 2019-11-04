@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-25 12:23:42
+ * @LastEditTime: 2019-11-04 13:12:28
  */
 import 'babel-polyfill'
 import Vue from 'vue'
@@ -16,6 +16,12 @@ import VueLazyLoad from 'vue-lazyload'
 import store from './store'
 
 import 'common/stylus/index.styl'
+import Router from 'vue-router'
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 fastclick.attach(document.body)// 取消原生点击300ms的延迟
 Vue.use(VueLazyLoad, {

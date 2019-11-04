@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 15:11:05
+ * @LastEditTime: 2019-11-04 14:31:39
  */
 import jsonp from 'common/js/jsonp'
 import { commonParams, options } from './config'
@@ -40,6 +40,32 @@ export function getDiscList() {
   })
 
   // return jsonp(url, data, options)
+
+  // Promise 请求
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
+// 推荐歌单的歌曲列表
+export function getSongList(disstid) {
+  // const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
+  const url = '/api/getSongList'
+
+  const data = Object.assign({}, commonParams, {// 将所有的参数放入data
+    type: 1,
+    json: 1,
+    utf8: 1,
+    onlysong: 0,
+    new_format: 1,
+    disstid: disstid,
+    format: 'json',
+    notice: 0,
+    platform: 'yqq.json',
+    newdNewCode: 0
+  })
 
   // Promise 请求
   return axios.get(url, {

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 15:30:58
+ * @LastEditTime: 2019-11-04 12:59:32
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -14,6 +14,7 @@ import Rank from 'components/rank/rank'
 import Search from 'components/search/search'
 import Singer from 'components/singer/singer'
 import SingerDetail from 'components/singer-detail/singer-detail'
+import Disc from 'components/disc/disc'
 
 Vue.use(Router)
 
@@ -27,7 +28,13 @@ export default new Router({
     {
       // 推荐页
       path: '/recommend',
-      component: Recommend
+      component: Recommend,
+      children: [ // 推荐页子路由
+        {
+          path: ':id',
+          component: Disc
+        }
+      ]
     },
     {
       // 排行页面

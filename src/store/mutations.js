@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:05:38
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-29 20:07:26
+ * @LastEditTime: 2019-11-04 13:42:28
  */
 // 定义修改操作，mutation就是多个方法的集合
 import * as types from './mutation-types'
@@ -33,6 +33,9 @@ const mutations = {
   },
   [types.SET_CURRENT_INDEX](state, index) {
     state.currentIndex = index
+  },
+  [types.SET_DISC](state, list) {
+    state.disc = list
   }
 }
 

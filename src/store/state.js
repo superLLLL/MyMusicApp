@@ -5,11 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:04:51
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 10:02:13
+ * @LastEditTime: 2019-11-04 13:41:39
  */
 // vuex 状态
 
-import {playMode} from 'common/js/config'
+import { playMode } from 'common/js/config'
 const state = {
   singer: {},
   playing: false, // 播放器的播放和暂停
@@ -17,7 +17,8 @@ const state = {
   playList: [], // 播放列表
   sequenceList: [], // 顺序列表/原始列表
   mode: playMode.sequence, // 语义化的方式去设置播放模式
-  currentIndex: -1 // 当前播放的索引
+  currentIndex: -1, // 当前播放的索引
+  disc: {} // 当前被点击的歌单的信息
 }
 
 export default state

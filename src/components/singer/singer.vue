@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 20:42:13
+ * @LastEditTime: 2019-11-04 15:02:24
  -->
 
 <!--  singer作为state数据 -->
@@ -59,7 +59,6 @@ export default {
             getSingerList().then((res) => {
                 if(res.code === ERR_OK){
                     this.singers = res.singerList.data.singerlist
-                    // console.log(res);
                     this.singers = this._normalizeSinger(this.singers);
                     // console.log(this.singer);
                     // console.log(res);

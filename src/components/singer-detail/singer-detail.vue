@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 22:06:53
+ * @LastEditTime: 2019-11-04 15:16:54
  -->
 <template>
     <transition name="slide">
@@ -52,7 +52,6 @@ export default {
             getSingerDetail(this.singer.no).then((res) => { // 获取歌手详细信息
                 if(res.code === ERR_OK){
                     // 调用_normalizeSongs方法获取歌曲信息
-                    // console.log(res); 
                     this.songs = this._normalizeSongs(res.singerSongList.data.songList)
                     // console.log(this.songs);
                 }
@@ -66,7 +65,7 @@ export default {
                 // 保证必须的参数歌曲名和歌曲编号都存在，才会创建对象
                 if (musicData.songInfo.ksong.id && musicData.songInfo.file.media_mid) {
                     // 将未处理的数据进行抽象处理
-                    ret.push(createSong(musicData))
+                    ret.push(createSong(musicData.songInfo))
                 }
             })
             return ret
