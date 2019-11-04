@@ -5,12 +5,12 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-24 14:52:08
+ * @LastEditTime: 2019-11-04 19:27:19
  */
 
 //  qq音乐公共接口参数
 export const commonParams = {
-  g_tk: 5318,
+  g_tk: 687381041,
   inCharset: 'utf-8',
   outCharset: 'utf-8',
   notice: 0,
