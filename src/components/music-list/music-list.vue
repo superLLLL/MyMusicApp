@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 19:42:42
+ * @LastEditTime: 2019-11-05 20:04:32
  -->
 
  <!--将歌手详细页模块化-->

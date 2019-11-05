@@ -5,20 +5,20 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 20:30:40
+ * @LastEditTime: 2019-11-05 19:26:30
  -->
 <template>
   <div class="rank" ref="rank">
     <scroll class="toplist" :data="toplist" ref="scroll">
       <ul>
-        <li class="item" v-for="item in toplist">
+        <li class="item" v-for="item in toplist" @click="selectItem(item)">
           <div class="icon">
             <img width="100" height="100" v-lazy="item.headPicUrl"/>
           </div>
           <ul class="songlist">
             <li class="song" v-for="(value, index) in item.song">
               <span>{{index + 1}}</span>
-              <span>{{value.sngerName}} - {{value.title}}</span>
+              <span>{{value.singerName}} - {{value.title}}</span>
             </li>
           </ul>
         </li>
@@ -27,6 +27,7 @@
         <loading></loading>
       </div>
     </scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -36,6 +37,8 @@ import { ERR_OK } from 'api/config'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import { playListMixin } from 'common/js/mixin'
+import { mapMutations } from 'vuex'
+
 
 export default {
   // 改变播放状态下的scroll的bottom
@@ -71,7 +74,17 @@ export default {
       const bottom = playlist.length > 0 ? '60px' : '0'
       this.$refs.rank.style.bottom = bottom
       this.$refs.scroll.refresh() // 刷新scroll
-    }
+    },
+    selectItem(item) { // 跳转子路由
+      console.log(item);
+      this.$router.push({
+        path: `/rank/${item.topId}`
+      })
+      this.setTopList(item)
+    },
+    ...mapMutations({
+      setTopList : 'SET_TOPLIST'
+    })
   },
   components: {
     Scroll,

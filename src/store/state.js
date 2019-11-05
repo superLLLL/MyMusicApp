@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:04:51
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 13:41:39
+ * @LastEditTime: 2019-11-05 19:20:47
  */
 // vuex 状态
 
@@ -18,7 +18,8 @@ const state = {
   sequenceList: [], // 顺序列表/原始列表
   mode: playMode.sequence, // 语义化的方式去设置播放模式
   currentIndex: -1, // 当前播放的索引
-  disc: {} // 当前被点击的歌单的信息
+  disc: {}, // 当前被点击的歌单的信息
+  topList: {} // 榜单详情数据
 }
 
 export default state
