@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-05 20:04:32
+ * @LastEditTime: 2019-11-06 13:12:13
  -->
 
  <!--将歌手详细页模块化-->
@@ -96,7 +96,7 @@
       this.$router.back()
     },
     selectItem(item, index) { // 从song-list子组件接收到的参数
-      // console.log(item+ ' ' + index);
+      // console.log(this.songs);
       this.selectPlay({   // 完成actions调用，将数据上传到state中,播放歌曲由index控制
         list: this.songs,
         index

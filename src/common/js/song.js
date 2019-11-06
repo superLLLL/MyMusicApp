@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-25 18:11:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 15:05:44
+ * @LastEditTime: 2019-11-06 10:20:47
  */
 
 // 封装一个Song类
@@ -34,7 +34,7 @@ export default class Song { // 创建一个Song对象
           this.lyric = Base64.decode(res.lyric) // Base64解析json数据
           resolve(this.lyric)
         } else {
-          reject('no lyric')
+          reject( "no lyric" )
         }
       })
     })

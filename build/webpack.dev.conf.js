@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 14:25:38
+ * @LastEditTime: 2019-11-06 12:16:26
  */
 'use strict'
 const utils = require('./utils')
@@ -173,6 +173,56 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       })
 
+      // 排行榜信息请求
+      app.get('/api/getTopList', function(req, res) {
+        let url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/m/index.html?tab=toplist/',
+            host: 'u.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+
+      // 排行榜歌曲信息
+      app.get('/api/getTopListSong', function(req, res) {
+        let url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/n/yqq/toplist/',
+            host: 'u.y.qq.com',
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+
+      // 获取歌曲vkey
+      app.get('/api/getSongVkey', function(req, res) {
+        let url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/portal/player.html/',
+            host: 'u.y.qq.com',
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e);
+        })
+      })
       
     },
   },

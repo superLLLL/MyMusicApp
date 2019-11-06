@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-30 14:18:26
+ * @LastEditTime: 2019-11-06 11:05:08
  */
 
 //  获取歌手名单 使用代理
@@ -102,41 +102,6 @@ export function getSingerDetail(SingerId) {
   }).then((res) => {
     return Promise.resolve(res.data)
   })
-}
-
-// 获取歌曲的信息，v-key axios请求代理接口
-// export function getMusicKey(songMid) {
-//   const url = `/api/getMusicKey`
-//   const data = Object.assign({}, commonParams, {
-//     songmid: songMid,
-//     guid: 3110397877,
-//     fromtag: 38,
-//     uid: 2635,
-//     data: `{"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"9244517832","songmid":["001Qu4I30eVFYb"],"songtype":[0],"uin":"0","loginflag":1,"platform":"20"}},"comm":{"uin":0,"format":"json","ct":24,"cv":0}}`
-//   })
-
-//   return axios.get(url, {
-//     params: data
-//   }).then((res) => {
-//     return Promise.resolve(res.data)
-//   })
-// }
-
-// h5版本qq音乐jsonp接口 v-key
-export function getMusicKey(songMid) {
-  const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
-  const data = Object.assign({}, {
-    loginUin: 3051522991,
-    format: 'jsonp',
-    platform: 'yqq',
-    needNewCode: 0,
-    cid: 205361747,
-    uin: 3051522991,
-    guid: 5931742855,
-    songmid: songMid,
-    filename: `C400${songMid}.m4a`
-  })
-  return jsonp(url, data, options)
 }
 
 export function getLocalMusic(songMid) {

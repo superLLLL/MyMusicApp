@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:06:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-02 13:56:17
+ * @LastEditTime: 2019-11-06 13:08:09
  */
 // 异步操作/ 对mutations的操作
 // 对一系列的提交做封装
@@ -31,6 +31,7 @@ export const selectPlay = function({commit, state}, {list, index}) { // 正常�
   commit(types.SET_CURRENT_INDEX, index)
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING, true)
+  commit(types.SET_SONGMID, list[index])
 }
 
 export const randomPlay = function ({commit}, {list}) { // 页面随机播放action

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 18:57:56
+ * @LastEditTime: 2019-11-06 13:12:46
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -120,6 +120,8 @@ import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
+import { getSongVkey } from 'api/song'
+import { ERR_OK } from 'api/config'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
@@ -137,6 +139,7 @@ export default {
   },
   created() {
     this.touch = {} // 移动事件共享数据
+    this._getSongVkey()
   },
   computed: {
     cdCls() {
@@ -162,10 +165,18 @@ export default {
       'playing', // 播放状态
       'currentIndex', // 歌曲的下标
       'mode', // 歌曲播放模式
-      'sequenceList' // 歌曲的原始列表
+      'sequenceList', // 歌曲的原始列表
+      'songMid' // 歌曲号
     ]),
   },
   methods: {
+    _getSongVkey(){
+      getSongVkey(this.songMid).then((res) => {
+        if (res.code === ERR_OK) {
+          console.log(res);
+        }
+      })
+    },
     Shrink() { // 收起播放器
       this.setFullScreen(false)
     },
@@ -283,7 +294,7 @@ export default {
         if (this.playing) { // 如果当前歌曲正在播放状态则播放歌词
           this.currentLyric.play()
         }
-        console.log(this.currentLyric)
+        // console.log(this.currentLyric)
       }).catch(() => { // 歌词获取出错，相关数据置空
         this.currentLyric = null // 歌词对象
         this.playingLyric = ''   // 当前正在playing的歌词
@@ -704,8 +715,8 @@ export default {
           font-size: 32px
           position: absolute
           left: 0
-          top: 0
-
+          // 不同浏览器的设置不同
+          top: 2px
   @keyframes rotate
     0%
       transform: rotate(0)

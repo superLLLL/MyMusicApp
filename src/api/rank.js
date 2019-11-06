@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-04 19:17:59
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-05 21:56:00
+ * @LastEditTime: 2019-11-06 10:13:39
  */
 // 排行榜的歌曲请求
 // import jsonp from 'common/js/jsonp'
@@ -31,7 +31,7 @@ export function getTopListSong(topId, time) {
   const url = '/api/getTopListSong'
   // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
 
-  let json = `{"detail":{"module":"musicToplist.ToplistInfoServer","method":"GetDetail","param":{"topId":"${topId}","offset":0,"num":20,"period":"${time}"}},"comm":{"ct":24,"cv":0}}`
+  let json = `{"detail":{"module":"musicToplist.ToplistInfoServer","method":"GetDetail","param":{"topId":${topId},"offset":0,"num":20,"period":"${time}"}},"comm":{"ct":24,"cv":0}}`
 
   // json = json.replace(/\:/g, '%3A').replace(/\,/g, '%2C')
 
@@ -41,10 +41,13 @@ export function getTopListSong(topId, time) {
     hostUin: 0,
     loginUin: 0,
     format: 'json',
+    inCharset: 'utf8',
+    outCharset: 'utf-8',
     notice: 0,
     platform: 'yqq.json',
     needNewCode: 0,
-    data: json
+    // 需要将当前data的特殊字符编码
+    data: encodeURIComponent(json)
   })
 
   return axios.get(url, {

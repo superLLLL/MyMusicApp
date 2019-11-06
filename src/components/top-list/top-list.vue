@@ -5,11 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-11-05 18:51:21
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-05 20:06:12
+ * @LastEditTime: 2019-11-06 12:47:52
  -->
 <template>
   <transition name="slide">
-    <music-list :title="getTitle" :bgImg="getBgimg"></music-list>
+    <music-list :title="getTitle" :bgImg="getBgimg" :songs="songs"></music-list>
   </transition>
 </template>
 
@@ -18,16 +18,22 @@ import MusicList from 'components/music-list/music-list'
 import { mapGetters } from 'vuex'
 import { getTopListSong } from 'api/rank'
 import { ERR_OK } from 'api/config'
+import { createSong } from 'common/js/song'
 
 export default {
+  data() {
+    return {
+      songs: [] // 歌曲属性，预计传入music-list
+    }
+  },
   computed: {
-    ...mapGetters([
+    ...mapGetters([ // 映射topList属性，因为多值依赖于他，所以写在computed中
       'topList'
     ]),
-    getTitle() {
+    getTitle() { // 返回标题名
       return this.topList.AdShareContent
     },
-    getBgimg() {
+    getBgimg() {  // 返回背景图片
       return this.topList.mbFrontPicUrl
     }
   },
@@ -35,7 +41,7 @@ export default {
     this._getTopListSong()
   },
   methods: {
-    getTime() {
+    getTime() { // 向歌曲请求中传入时间
       let date = new Date()
       let year = date.getFullYear()
       let month = date.getMonth() + 1
@@ -47,16 +53,28 @@ export default {
         day = '0' + day
       }
       let nowDate = year + "-" + month + "-" + day;
-      console.log(nowDate);
       return nowDate
     },
-    _getTopListSong() {
+    _getTopListSong() { // 请求歌曲数据
+      if (!this.topList.topId) { // 没正常进入，则return
+        this.$router.back()
+        return
+      }
       let time = this.getTime()
-      getTopListSong(this.topList.topId, time).then((res) => {
+      getTopListSong(this.topList.topId, time).then((res) => { // 异步请求数据
         if (res.code === ERR_OK) {
-          console.log(res);
+          // console.log(res.detail.data);
+          this.songs = this._normalizeSongs(res.detail.data.songInfoList)
+          // console.log(this.songs)
         }
       })
+    },
+    _normalizeSongs(list) { // 格式化数据
+      let ret = []
+      list.forEach(element => {
+        ret.push(createSong(element))
+      });
+      return ret
     }
   },
   components: {

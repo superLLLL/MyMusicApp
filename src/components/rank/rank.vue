@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-05 19:26:30
+ * @LastEditTime: 2019-11-06 10:52:30
  -->
 <template>
   <div class="rank" ref="rank">
@@ -76,7 +76,6 @@ export default {
       this.$refs.scroll.refresh() // 刷新scroll
     },
     selectItem(item) { // 跳转子路由
-      console.log(item);
       this.$router.push({
         path: `/rank/${item.topId}`
       })
