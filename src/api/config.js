@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:06
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 19:27:19
+ * @LastEditTime: 2019-11-06 16:05:31
  */
 
 //  qq音乐公共接口参数
@@ -15,7 +15,9 @@ export const commonParams = {
   outCharset: 'utf-8',
   notice: 0,
   format: 'jsonp',
-  uin: '1729792587'
+  uin: '1729792587',
+  hostUin: 0,
+  needNewCode: 0
 }
 // jsonp跨越用callback
 export const options = {

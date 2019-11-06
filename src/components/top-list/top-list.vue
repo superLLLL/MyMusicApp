@@ -5,11 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-11-05 18:51:21
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 12:47:52
+ * @LastEditTime: 2019-11-06 13:38:10
  -->
 <template>
   <transition name="slide">
-    <music-list :title="getTitle" :bgImg="getBgimg" :songs="songs"></music-list>
+    <music-list :rank="rank" :title="getTitle" :bgImg="getBgimg" :songs="songs"></music-list>
   </transition>
 </template>
 
@@ -23,7 +23,8 @@ import { createSong } from 'common/js/song'
 export default {
   data() {
     return {
-      songs: [] // 歌曲属性，预计传入music-list
+      songs: [], // 歌曲属性，预计传入music-list
+      rank: true // 排行榜效果
     }
   },
   computed: {

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 13:12:46
+ * @LastEditTime: 2019-11-06 15:14:19
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -139,7 +139,7 @@ export default {
   },
   created() {
     this.touch = {} // 移动事件共享数据
-    this._getSongVkey()
+    // this._getSongVkey()
   },
   computed: {
     cdCls() {
@@ -170,13 +170,13 @@ export default {
     ]),
   },
   methods: {
-    _getSongVkey(){
-      getSongVkey(this.songMid).then((res) => {
-        if (res.code === ERR_OK) {
-          console.log(res);
-        }
-      })
-    },
+    // _getSongVkey(){
+    //   getSongVkey(this.songMid).then((res) => {
+    //     if (res.code === ERR_OK) {
+    //       console.log(res);
+    //     }
+    //   })
+    // },
     Shrink() { // 收起播放器
       this.setFullScreen(false)
     },

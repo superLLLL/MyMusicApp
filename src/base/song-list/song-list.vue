@@ -5,12 +5,15 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 21:49:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 12:50:59
+ * @LastEditTime: 2019-11-06 13:36:16
  -->
 <template>
   <div class="song-list">
     <ul>
       <li @click="selectItem(song, index)" class="item" v-for="(song, index) in songs">
+        <div class="rank" v-show="rank">
+          <span :class="getRankCls(index)">{{getRankText(index)}}</span>
+        </div>
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -26,6 +29,10 @@ export default {
     songs:{
       type: Array,
       default: []
+    },
+    rank: { // 默认排行样式
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -35,6 +42,18 @@ export default {
     },
     selectItem(item, index) { // 向上（music-list）派送事件select，内容包含被点击歌曲和下标
       this.$emit('select', item, index)
+    },
+    getRankCls(index) { // 动态绑定css样式
+      if (index <= 2) { // 前三名为图片
+        return `icon icon${index}`
+      } else { // 后面是文字
+        return 'text'
+      }
+    },
+    getRankText(index) { // 动态绑定文案
+      if (index > 2) {
+        return index + 1
+      }
     }
   },
   // watch: {

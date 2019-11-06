@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 12:16:26
+ * @LastEditTime: 2019-11-06 19:37:10
  */
 'use strict'
 const utils = require('./utils')
@@ -215,6 +215,23 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           headers: {
             referer: 'https://y.qq.com/portal/player.html/',
             host: 'u.y.qq.com',
+          },
+          params: req.query
+        }).then((response) => {
+          res.json(response.data)
+        }).catch((e) => {
+          console.log(e);
+        })
+      })
+
+      // 获取搜索的热门推荐
+      app.get('/api/search', function(req, res) {
+        let url = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://y.qq.com/portal/search.html/',
+            host: 'c.y.qq.com',
           },
           params: req.query
         }).then((response) => {
