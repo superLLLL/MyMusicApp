@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 15:27:36
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 19:36:23
+ * @LastEditTime: 2019-11-07 13:43:42
  */
 // 请求搜索热门
 import jsonp from 'common/js/jsonp'
@@ -26,7 +26,7 @@ export function getHotKey() {
 
 // 获取搜索数据
 // query: 搜索字段； page: 第几页； zhida：是否跳转到歌手
-export function search(query, page, zhida) {
+export function search(query, page, zhida, perpage) {
   // const url = 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp'
   const url = '/api/search'
 
@@ -43,7 +43,7 @@ export function search(query, page, zhida) {
     lossless: 0,
     flag_qc: 0,
     p: page, // 页号
-    n: 10,
+    n: perpage,
     w: query, // 请求字段
     g_tk: 5381,
     hostUin: 0,

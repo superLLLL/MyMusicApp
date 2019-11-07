@@ -5,10 +5,15 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 20:21:04
+ * @LastEditTime: 2019-11-07 14:42:11
  -->
 <template>
-  <div class="suggest">
+  <scroll class="suggest"
+          :data="result" 
+          :pullUp="pullUp"
+          @scrollToEnd="searchMore"
+          ref="scroll"
+  >
     <ul class="suggest-list">
       <li class="suggest-item" v-for="item in result"> 
         <div class="icon">
@@ -18,16 +23,20 @@
           <p class="text" v-html="getDisplayName(item)"></p>
         </div>
       </li>
+      <loading v-show="hasMore" title=""></loading>
     </ul>
-  </div>
+  </scroll>
 </template>
 
 <script>
 import { search } from 'api/search'
 import { ERR_OK } from 'api/config'
-import { filterSinger } from 'common/js/song'
+import { createSong } from 'common/js/song'
+import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 
 const TYPE_SINGER = 'singer'
+const PERPAGE = 20 // 每次请求页的个数
 
 export default {
   props: {
@@ -43,24 +52,53 @@ export default {
   data() {
     return {
       page: 1, // 默认页号
-      result: [] // 请求回的搜索结果
+      result: [], // 请求回的搜索结果
+      pullUp: true, // 此页面需要上拉刷新
+      hasMore: true // 是否仍有未加载数据标志位
     }
   },
   methods: {
     Search() { // 请求搜索字段
-      search(this.query, this.page, this.showSinger).then((res) => {
+    // 当我们改变了query的时候，page还是++状态，hasMore为flase，scroll的滚动距离没有重置；这是不行的
+      this.page = 1 // 这是首次（query改变时）的加载
+      this.hasMore = true
+      this.$refs.scroll.scrollTo(0, 0)
+      search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
         if (res.code === ERR_OK) {
-          console.log(res);
-          this.result = this._genResult(res.data)
-          console.log(this.result);
+          // console.log(res);
+          this.result = this._genResult(res.data) // 初步格式化
+          // console.log(this.result);
+          this.checkMore(res.data)
         }
       })
     },
+    searchMore() { // 上拉刷新，搜索更多；即请求下一页面的数据
+      if (!this.hasMore) {
+        return 
+      }
+      this.page++ // 将要搜索的数据页数加1
+      search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
+        if(res.code === ERR_OK) {
+          // 如果成功请求到数据，将数据连接起来
+          this.result = this.result.concat(this._genResult(res.data))
+          this.checkMore(res.data)
+        }
+      })
+    },
+    checkMore(data) { // 检测是否仍有数据
+      let song = data.song
+      if (!song.list.length|| (song.curnum + song.curpage * PERPAGE) >= song.totalnum) {
+        this.hasMore = false
+      }
+    },
     getIconCls(item) {  // 以当前搜索出的类型，来决定样式
+    // console.log(item);
       if (item.type === TYPE_SINGER) {
+        // 为歌手时，数据初始化时，将如果是歌手的情况放在了最前面；所以一般icon-mine只会应用在最前面
         return 'icon-mine'
       } else {
-        return 'icon-muusic'
+        // 其他就为歌曲，加上icon-music样式
+        return 'icon-music'
       }
     },
     getDisplayName(item) { // 返回搜索结果的各个名称
@@ -68,19 +106,29 @@ export default {
         return item.singername
       } else {
         // 返回歌名和 格式化后的歌手名
-        return `${item.name} - ${filterSinger(item.singer)}`
+        return `${item.name} - ${item.singer}`
       }
       
     },
     _genResult(data) { // 格式化请求数据
       let ret = []
-      if (data.zhida && data.zhida.zhida_singer.singerID) {
-        // 将zhida的数据全拿，type就是为了之后来区分：当前搜索是歌手还是歌曲
+      if (data.zhida && data.zhida.zhida_singer) {
+        // 如果zhida是1，且有zhida_singer就说明是歌手搜索，将zhida的数据全拿，设置type：type就是为了之后来区分：当前搜索是歌手还是歌曲
         ret.push({...data.zhida, ...{type: TYPE_SINGER}})
       }
       if (data.song) { // 反正歌曲是一定要拿的
-        ret = ret.concat(data.song.list)
+        ret = ret.concat(this._normalizeSongs(data.song.list))
       }
+      return ret
+    },
+    _normalizeSongs(list) { // 格式化数据用于song
+      let ret = []
+      list.forEach(element => {
+        // 保证数据完整
+        if (element.album && element.ksong) {
+          ret.push(createSong(element))
+        }
+      })
       return ret
     }
   },
@@ -88,6 +136,10 @@ export default {
     query(){ // 当query更新时，请求搜索
       this.Search()
     }
+  },
+  components: {
+    Scroll,
+    Loading
   }
 }
 </script>

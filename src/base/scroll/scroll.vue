@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 20:39:34
+ * @LastEditTime: 2019-11-07 14:24:36
  -->
 
  <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
@@ -26,15 +26,19 @@ export default {
       type: Number,
       default: 3
     },
-    click: {
+    click: { 
       type: Boolean,
       default: true
     },
-    data: {
+    data: { // 以data创建滚动
       type: Array,
       default: null
     },
-    listenScroll: {
+    listenScroll: { // 是否监听滚动的
+      type: Boolean,
+      default: false
+    },
+    pullUp: { // 是否实现上拉刷新
       type: Boolean,
       default: false
     }
@@ -59,6 +63,14 @@ export default {
         let me = this
         this.scroll.on('scroll', (pos) => { // 绑定scroll事件，并准备将pos(滚动的实时坐标)传会父组件的scroll事件
           me.$emit('scroll', pos)
+        })
+      }
+
+      if(this.pullUp) { // 上拉刷新，调用scroll的scrollEnd事件
+        this.scroll.on('scrollEnd', () => {
+          if (this.scroll.y <= (this.scroll.maxScrollY + 50)) { // 表示将要滚到底部
+            this.$emit('scrollToEnd')
+          }
         })
       }
     },
