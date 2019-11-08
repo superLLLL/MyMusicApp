@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 11:00:46
+ * @LastEditTime: 2019-11-08 12:12:07
  -->
 <template>
   <scroll class="suggest"
@@ -93,7 +93,7 @@ export default {
           id: item.zhida_singer.singerID,
           name: item.zhida_singer.singerName,
           index: 0,
-          avatar: item.zhida_singer.singerMID
+          mid: item.zhida_singer.singerMID
         })
         // console.log(singer);
         this.$router.push({

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 10:55:59
+ * @LastEditTime: 2019-11-08 12:09:33
  -->
 
 <!--  singer作为state数据 -->
@@ -78,7 +78,8 @@ export default {
                         no: index,                  // 做下标
                         id: value.singer_id,        // 放歌手id
                         name: value.singer_name,   // 放歌手名字
-                        avatar: value.singer_pic    // 放歌手头像/照片
+                        avatar: value.singer_pic,    // 放歌手头像/照片
+                        mid: value.singer_mid
                     })
                 }
             });

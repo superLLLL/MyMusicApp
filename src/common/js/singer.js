@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-21 20:17:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 10:58:00
+ * @LastEditTime: 2019-11-08 12:13:36
  */
 // export default class Singer {
 //   constructor({id, name}) {
@@ -16,10 +16,11 @@
 // }
 
 export default class Singer {
-  constructor({id, name, index, avatar}) {
+  constructor({id, name, index, mid}) {
     this.id = id
     this.name = name
-    this.avatar = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${avatar}.jpg?max_age=2592000`
     this.no = index
+    this.mid = mid
+    this.avatar = `https://y.gtimg.cn/music/photo_new/T001R300x300M000${mid}.jpg?max_age=2592000`
   }
 }
