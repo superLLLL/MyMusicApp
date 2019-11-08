@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-22 08:07:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-03 20:39:45
+ * @LastEditTime: 2019-11-08 10:48:01
  -->
 <template>
   <div class="singerlist">
@@ -15,7 +15,7 @@
           <h2 class="list-group-title">热门推荐</h2>
           <li @click='selectItem(group)' v-for='group in data' class="list-group-item">
               <img v-lazy="group.avatar" class="avatar" alt="">
-              <span class="name">{{group.items}}</span>
+              <span class="name">{{group.name}}</span>
           </li>
         </ul>
       </div>

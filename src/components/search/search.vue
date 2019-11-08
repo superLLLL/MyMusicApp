@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 20:22:30
+ * @LastEditTime: 2019-11-08 10:20:28
  -->
 <template>
   <div class="search">
@@ -27,6 +27,7 @@
     <div class="search-result" v-show="query">
       <suggest :query="query"></suggest>
     </div> 
+    <router-view></router-view>
   </div>
 </template>
 

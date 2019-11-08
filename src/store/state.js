@@ -5,13 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:04:51
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 13:00:16
+ * @LastEditTime: 2019-11-08 10:50:54
  */
 // vuex 状态
 
 import { playMode } from 'common/js/config'
 const state = {
-  singer: {},
+  singer: {}, // 歌手信息
   playing: false, // 播放器的播放和暂停
   fullScreen: false, // 播放器的展开和收起
   playList: [], // 播放列表

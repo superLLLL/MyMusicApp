@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-07 14:42:11
+ * @LastEditTime: 2019-11-08 11:00:46
  -->
 <template>
   <scroll class="suggest"
@@ -15,7 +15,7 @@
           ref="scroll"
   >
     <ul class="suggest-list">
-      <li class="suggest-item" v-for="item in result"> 
+      <li @click="selectItem(item)" class="suggest-item" v-for="item in result"> 
         <div class="icon">
           <i :class="getIconCls(item)"></i>
         </div>
@@ -34,6 +34,8 @@ import { ERR_OK } from 'api/config'
 import { createSong } from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
+import Singer from 'common/js/singer'
+import { mapMutations } from 'vuex'
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20 // 每次请求页的个数
@@ -85,6 +87,21 @@ export default {
         }
       })
     },
+    selectItem(item) { // 路由跳转
+      if (item.type === TYPE_SINGER) { // 如果点击的是歌手图比奥
+        const singer = new Singer({ // 封装歌手基本信息
+          id: item.zhida_singer.singerID,
+          name: item.zhida_singer.singerName,
+          index: 0,
+          avatar: item.zhida_singer.singerMID
+        })
+        // console.log(singer);
+        this.$router.push({
+          path: `/search/${singer.id}`
+        }) // 路由跳转
+        this.setSinger(singer)
+      }
+    },
     checkMore(data) { // 检测是否仍有数据
       let song = data.song
       if (!song.list.length|| (song.curnum + song.curpage * PERPAGE) >= song.totalnum) {
@@ -102,8 +119,8 @@ export default {
       }
     },
     getDisplayName(item) { // 返回搜索结果的各个名称
-      if (item.type === TYPE_SINGER) {
-        return item.singername
+      if (item.type === TYPE_SINGER) { // 如果type为歌手，则显示歌手名
+        return item.zhida_singer.singerName
       } else {
         // 返回歌名和 格式化后的歌手名
         return `${item.name} - ${item.singer}`
@@ -130,7 +147,11 @@ export default {
         }
       })
       return ret
-    }
+    },
+    ...mapMutations({
+      // 把对mutation的修改映射成方法,此处为方法  SET_SINGER
+      setSinger: 'SET_SINGER'
+    })
   },
   watch: {
     query(){ // 当query更新时，请求搜索

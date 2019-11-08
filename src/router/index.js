@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-05 19:14:07
+ * @LastEditTime: 2019-11-08 10:28:20
  */
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -49,15 +49,21 @@ export default new Router({
       ]
     },
     {
-      // 搜索页面
-      path: '/search',
-      component: Search
-    },
-    {
       // 歌手页面
       path: '/singer',
       component: Singer,
       // 歌手子路由--歌手详情页面
+      children: [
+        {// 以id为变量,跳转不同路由
+          path: ':id',
+          component: SingerDetail
+        }
+      ]
+    },
+    {
+      // 搜索页面
+      path: '/search',
+      component: Search,
       children: [
         {// 以id为变量,跳转不同路由
           path: ':id',

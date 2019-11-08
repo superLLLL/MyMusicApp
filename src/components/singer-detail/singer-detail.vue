@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 15:16:54
+ * @LastEditTime: 2019-11-08 10:48:32
  -->
 <template>
     <transition name="slide">
@@ -27,7 +27,7 @@ export default {
     },
     computed: {
         title() {  // 抽象出歌手名
-            return this.singer.items
+            return this.singer.name
         },
         bgImg() {  // 抽象出歌手的图片
             return this.singer.avatar
