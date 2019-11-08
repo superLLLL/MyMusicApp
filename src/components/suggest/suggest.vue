@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 12:12:07
+ * @LastEditTime: 2019-11-08 19:25:08
  -->
 <template>
   <scroll class="suggest"
@@ -35,7 +35,7 @@ import { createSong } from 'common/js/song'
 import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
-import { mapMutations } from 'vuex'
+import { mapMutations, actions, mapActions} from 'vuex'
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20 // 每次请求页的个数
@@ -100,6 +100,8 @@ export default {
           path: `/search/${singer.id}`
         }) // 路由跳转
         this.setSinger(singer)
+      } else {
+        this.insertSong(item)
       }
     },
     checkMore(data) { // 检测是否仍有数据
@@ -151,7 +153,10 @@ export default {
     ...mapMutations({
       // 把对mutation的修改映射成方法,此处为方法  SET_SINGER
       setSinger: 'SET_SINGER'
-    })
+    }),
+    ...mapActions([
+      'insertSong'
+    ])
   },
   watch: {
     query(){ // 当query更新时，请求搜索

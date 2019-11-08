@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 15:14:19
+ * @LastEditTime: 2019-11-08 19:30:06
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -437,6 +437,11 @@ export default {
     })
   },
   watch: {
+    // 检测播放的歌曲
+    // playList(newValue) {
+    //   console.log(this.playList);
+    //   console.log(this.currentSong);
+    // },
     currentSong(newSong, oldSong) {
       if (newSong.id === oldSong.id) { // 因为上面对下标做了改变，所以会触发watch；所以要对其回调函数设置新旧值的歌曲id是一样的则返回
         return
