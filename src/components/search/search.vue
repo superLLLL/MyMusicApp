@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 10:20:28
+ * @LastEditTime: 2019-11-08 20:36:24
  -->
 <template>
   <div class="search">
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="search-result" v-show="query">
-      <suggest :query="query"></suggest>
+      <suggest @listScroll="blurInput" :query="query"></suggest>
     </div> 
     <router-view></router-view>
   </div>
@@ -60,6 +60,9 @@ export default {
     },
     onQueryChange(query) { // search-box传上来的值
       this.query = query
+    },
+    blurInput() {
+      this.$refs.searchBox.blur()
     }
   },
  components: {

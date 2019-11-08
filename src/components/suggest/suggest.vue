@@ -5,12 +5,14 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 19:25:08
+ * @LastEditTime: 2019-11-08 20:34:03
  -->
 <template>
   <scroll class="suggest"
           :data="result" 
           :pullUp="pullUp"
+          :beforeScroll="beforeScroll"
+          @beforeScroll="listScroll"
           @scrollToEnd="searchMore"
           ref="scroll"
   >
@@ -25,6 +27,9 @@
       </li>
       <loading v-show="hasMore" title=""></loading>
     </ul>
+    <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+      <no-result title="抱歉，未能找到您要的搜索结果"></no-result>
+    </div>
   </scroll>
 </template>
 
@@ -36,6 +41,7 @@ import Scroll from 'base/scroll/scroll'
 import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
 import { mapMutations, actions, mapActions} from 'vuex'
+import NoResult from 'base/no-result/no-result'
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20 // 每次请求页的个数
@@ -56,7 +62,8 @@ export default {
       page: 1, // 默认页号
       result: [], // 请求回的搜索结果
       pullUp: true, // 此页面需要上拉刷新
-      hasMore: true // 是否仍有未加载数据标志位
+      hasMore: true, // 是否仍有未加载数据标志位
+      beforeScroll: true // 滚动前事件
     }
   },
   methods: {
@@ -103,6 +110,9 @@ export default {
       } else {
         this.insertSong(item)
       }
+    },
+    listScroll() { // 也只是将事件派发出去
+      this.$emit('listScroll')
     },
     checkMore(data) { // 检测是否仍有数据
       let song = data.song
@@ -165,7 +175,8 @@ export default {
   },
   components: {
     Scroll,
-    Loading
+    Loading,
+    NoResult
   }
 }
 </script>
@@ -197,8 +208,8 @@ export default {
         .text
           no-wrap()
     .no-result-wrapper
-      position: absolute
+      display: absolute
       width: 100%
       top: 50%
-      transform: translateY(-50%)
+      transform: translateY(50%)
 </style>

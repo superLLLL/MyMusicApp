@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-07 14:24:36
+ * @LastEditTime: 2019-11-08 20:32:41
  -->
 
  <!--抽象Scroll组件： 其重点在于 wrapper一定要小于scroll-->
@@ -41,6 +41,10 @@ export default {
     pullUp: { // 是否实现上拉刷新
       type: Boolean,
       default: false
+    },
+    beforeScroll: { // 滚动前
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -71,6 +75,12 @@ export default {
           if (this.scroll.y <= (this.scroll.maxScrollY + 50)) { // 表示将要滚到底部
             this.$emit('scrollToEnd')
           }
+        })
+      }
+
+      if (this.beforeScroll) { // 滚动前，使手机端的键盘消失
+        this.scroll.on('beforeScrollStart', () => {
+          this.$emit('beforeScroll') // 只将作为事件派发出去
         })
       }
     },

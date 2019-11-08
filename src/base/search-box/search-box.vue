@@ -5,17 +5,18 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 14:23:33
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 20:01:20
+ * @LastEditTime: 2019-11-08 20:35:36
  -->
 <template>
   <div class="search-box">
     <i class="icon-search"></i>
-    <input type="text" class="box" v-model="query" :placeholder="placeholder">
+    <input ref="input" type="text" class="box" v-model="query" :placeholder="placeholder">
     <i v-show="query" class="icon-dismiss" @click="clearQuery" ></i>
   </div>  
 </template>
 
 <script>
+import { onbounce } from "common/js/util"
 export default {
   props: {
     placeholder: { // 提示符
@@ -34,13 +35,16 @@ export default {
     },
     setQuery(query) { // 从父组件中传值，修改query
       this.query = query.k
+    },
+    blur() {
+      this.$refs.input.blur() // 手机端键盘消失事件
     }
   },
   created() {
     // 将新的query值，传出去
-    this.$watch('query', (newValue) => {
+    this.$watch('query', onbounce((newValue) => {
       this.$emit('query', newValue)
-    })
+    }, 200))
   },
 }
 </script>
