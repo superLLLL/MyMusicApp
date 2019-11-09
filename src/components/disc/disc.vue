@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-04 12:49:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 19:12:42
+ * @LastEditTime: 2019-11-04 15:30:27
  -->
 <!-- 推荐页的 歌单详情 复用music-list来完成 -->
 <template>
@@ -50,8 +50,9 @@ export default {
       }
       getSongList(this.disc.dissid).then((res) => {
         if (res.code === ERR_OK) {
+          console.log(res.cdlist[0].songlist)
           this.songs = this._normalizeSongs(res.cdlist[0].songlist)
-          // console.log(this.songs)
+          console.log(this.songs)
         }
       })
     },

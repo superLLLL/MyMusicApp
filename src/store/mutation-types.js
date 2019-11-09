@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:05:59
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 08:24:15
+ * @LastEditTime: 2019-11-04 13:41:59
  */
 // 存放mutations相关的字符串常量， 与mutations做关联
 export const SET_SINGER = 'SET_SINGER'
@@ -16,6 +16,3 @@ export const SET_SEQUENCE_LIST = 'SET_SEQUENCE_LIST'
 export const SET_MODE = 'SET_MODE'
 export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'
 export const SET_DISC = 'SET_DISC'
-export const SET_TOPLIST = 'SET_TOPLIST'
-export const SET_SONGMID = 'SET_SONGMID'
-export const SET_SEARCH_HISTORY = 'SET_SEARCH_HISTORY'

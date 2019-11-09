@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 19:26:44
+ * @LastEditTime: 2019-10-28 12:57:13
  */
 // 整个与项目相关的配置信息，推荐都要有这样的一个文件
 export const playMode = {

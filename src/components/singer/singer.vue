@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 12:43:48
+ * @LastEditTime: 2019-11-04 15:02:24
  -->
 
 <!--  singer作为state数据 -->
@@ -19,8 +19,7 @@
 
 <script>
 import {getSingerList} from 'api/singer'
-// qq音乐公共接口正常连接返回的参数
-import {ERR_OK} from 'api/config'
+import {ERR_OK} from 'api/config'   // qq音乐公共接口正常连接返回的参数
 import ListView from 'base/listview/listview'
 // vuex语法糖：是对mutations做一层封装
 import {mapMutations} from 'vuex'
@@ -49,26 +48,24 @@ export default {
         },
         // 获取listview传上来的数据(被点击的歌手的基础信息)，以跳转路由
         selectSinger(singer) {
-            // push编程式路由跳转
-            this.$router.push({
+            // console.log(singer);
+            this.$router.push({    // push编程式路由跳转
                 path: `/singer/${singer.id}`
             })
             // 调用之后，即实现了对mutation的提交
             this.setSinger(singer)
         },
-        //获取热门歌手排行信息
-        _getSingerList() {
+        _getSingerList() {     //获取热门歌手排行信息
             getSingerList().then((res) => {
                 if(res.code === ERR_OK){
                     this.singers = res.singerList.data.singerlist
                     this.singers = this._normalizeSinger(this.singers);
-                    // console.log(this.singers);
+                    // console.log(this.singer);
                     // console.log(res);
                 }
             })
         },
-        // 取出真正有用的歌手信息
-        _normalizeSinger(list) {
+        _normalizeSinger(list) {   // 取出真正有用的歌手信息
             let map = {
                 hots: {
                     title: HOT_NAME,   // 固定标题
@@ -78,11 +75,10 @@ export default {
             list.forEach((value, index) => {
                 if(index < HOT_SINGER_LEN) {
                     map.hots.items.push({
-                        no: index,                  // 做下标
+                        no: index,                  // 假no用来获取歌手详情
                         id: value.singer_id,        // 放歌手id
-                        name: value.singer_name,   // 放歌手名字
-                        avatar: value.singer_pic,    // 放歌手头像/照片
-                        mid: value.singer_mid
+                        items: value.singer_name,   // 放歌手名字
+                        avatar: value.singer_pic    // 放歌手头像/照片
                     })
                 }
             });

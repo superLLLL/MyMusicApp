@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 18:57:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 13:37:05
+ * @LastEditTime: 2019-11-03 19:42:42
  -->
 
  <!--将歌手详细页模块化-->
@@ -27,7 +27,7 @@
     <div class="bg-layer" ref="layer"></div>
     <scroll @scroll="scroll" :probe-type="probeType" :listen-scroll="listenScroll" :data="songs" class="list" ref="list">
       <div class="song-list-wrapper">
-        <song-list :rank="rank" :songs="songs" @select="selectItem" ></song-list>
+        <song-list :songs="songs" @select="selectItem" ></song-list>
       </div>
       <div class="loadingcontainer" v-show="!songs.length">
           <loading></loading>
@@ -61,10 +61,6 @@
       bgImg: {
         type:String,
         default: ''
-      },
-      rank: {
-        type: Boolean,
-        default: false
       }
    },
    data() { // 维护纵向滚动的值，保存纵向滚动的值
@@ -100,7 +96,7 @@
       this.$router.back()
     },
     selectItem(item, index) { // 从song-list子组件接收到的参数
-      // console.log(this.songs);
+      // console.log(item+ ' ' + index);
       this.selectPlay({   // 完成actions调用，将数据上传到state中,播放歌曲由index控制
         list: this.songs,
         index
