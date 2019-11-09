@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 20:36:24
+ * @LastEditTime: 2019-11-09 11:17:33
  -->
 <template>
   <div class="search">
@@ -17,15 +17,24 @@
         <div class="hot-key">
           <h1 class="title">热门搜索</h1>
           <ul>
-            <li @click="setQuery(item)" class="item" v-for="item in hotkey">
+            <li @click="setQuery(item.k)" class="item" v-for="item in hotkey">
               <span>{{item.k}}</span>
             </li>
           </ul>
         </div>
+        <div class="search-history" v-show="searchHistory.length">
+          <h1 class="title">
+            <span class="text">搜索历史</span>
+            <span class="clear">
+              <i class="icon-clear"></i>
+            </span>
+          </h1>
+          <search-list @selectItem="setQuery" :searches="searchHistory"></search-list>
+        </div>
       </div>
     </div>
     <div class="search-result" v-show="query">
-      <suggest @listScroll="blurInput" :query="query"></suggest>
+      <suggest @select="saveSearch" @listScroll="blurInput" :query="query"></suggest>
     </div> 
     <router-view></router-view>
   </div>
@@ -36,6 +45,9 @@ import SearchBox from 'base/search-box/search-box'
 import { getHotKey } from 'api/search'
 import { ERR_OK } from 'api/config'
 import Suggest from 'components/suggest/suggest'
+import { mapActions, mapGetters } from 'vuex'
+import SearchList from 'base/search-list/search-list'
+
 
 export default {
   data() {
@@ -46,6 +58,11 @@ export default {
   },
   created() {
     this._getHotKey()
+  },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
   },
   methods: {
     setQuery(query) { // 点击搜索热门后，将值输入到input
@@ -58,16 +75,23 @@ export default {
         }
       })
     },
+    saveSearch() {
+      this.saveSearchHistory(this.query)
+    },
     onQueryChange(query) { // search-box传上来的值
       this.query = query
     },
     blurInput() {
       this.$refs.searchBox.blur()
-    }
+    },
+    ...mapActions([
+      'saveSearchHistory'
+    ])
   },
  components: {
    SearchBox,
-   Suggest
+   Suggest,
+   SearchList
  }
 
 }

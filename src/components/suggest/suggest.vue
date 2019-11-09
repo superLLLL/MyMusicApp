@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 20:34:03
+ * @LastEditTime: 2019-11-09 08:40:30
  -->
 <template>
   <scroll class="suggest"
@@ -42,6 +42,7 @@ import Loading from 'base/loading/loading'
 import Singer from 'common/js/singer'
 import { mapMutations, actions, mapActions} from 'vuex'
 import NoResult from 'base/no-result/no-result'
+
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20 // 每次请求页的个数
@@ -110,6 +111,8 @@ export default {
       } else {
         this.insertSong(item)
       }
+      // 向外派发点击事件，这层组件不应该有存取的逻辑，应交由父组件完成
+      this.$emit('select') 
     },
     listScroll() { // 也只是将事件派发出去
       this.$emit('listScroll')

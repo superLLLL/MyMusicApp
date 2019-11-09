@@ -5,13 +5,14 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:06:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 19:28:56
+ * @LastEditTime: 2019-11-09 10:10:13
  */
 // 异步操作/ 对mutations的操作
 // 对一系列的提交做封装
 import * as types from './mutation-types'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
+import { saveSearch } from 'common/js/cache'
 
 // 返回song在list中对应的下标
 function findindex(list, song) {
@@ -38,7 +39,7 @@ export const selectPlay = function ({ commit, state }, { list, index }) {
 }
 
 // 页面随机播放action
-export const randomPlay = function ({ commit }, { list }) { 
+export const randomPlay = function ({ commit }, { list }) {
   commit(types.SET_MODE, playMode.random)
   commit(types.SET_SEQUENCE_LIST, list)
   let randomlist = shuffle(list) // 重新洗牌
@@ -51,7 +52,7 @@ export const randomPlay = function ({ commit }, { list }) {
 }
 
 // 为当前即将播放的歌曲排序
-export const insertSong = function ({ commit, state }, song) {
+export const insertSong = function ({ commit, state }, song) { // song为当前歌曲
   // 如果是对象或者数组需要地址来应用内容的要使用副本，否则可以出现问题；之后都修改副本，就不会影响到原始数据
   let playList = state.playList
   let sequenceList = state.sequenceList
@@ -99,4 +100,9 @@ export const insertSong = function ({ commit, state }, song) {
   commit(types.SET_CURRENT_INDEX, currentIndex)
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING, true)
+}
+
+export function saveSearchHistory({commit}, query) { // query为当前搜索的内容
+  // 将经过缓存的数据添加到searHistory中
+  commit(types.SET_SEARCH_HISTORY, saveSearch(query))
 }

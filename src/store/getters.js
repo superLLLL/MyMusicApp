@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:07:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 13:03:40
+ * @LastEditTime: 2019-11-09 10:28:32
  */
 // 包装state的数据，可以去出去
 export const singer = state => state.singer
@@ -21,3 +21,4 @@ export const currentSong = (state) => { // 返回歌曲，如果没有就返回�
 export const disc = state => state.disc
 export const topList = state => state.topList
 export const songMid = state => state.songMid
+export const searchHistory = state => state.searchHistory

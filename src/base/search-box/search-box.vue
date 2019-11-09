@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 14:23:33
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 20:35:36
+ * @LastEditTime: 2019-11-09 11:17:17
  -->
 <template>
   <div class="search-box">
@@ -34,7 +34,7 @@ export default {
       this.query = ''
     },
     setQuery(query) { // 从父组件中传值，修改query
-      this.query = query.k
+      this.query = query
     },
     blur() {
       this.$refs.input.blur() // 手机端键盘消失事件
