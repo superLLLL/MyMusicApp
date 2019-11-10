@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:06:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 16:53:25
+ * @LastEditTime: 2019-11-10 20:24:40
  */
 // 异步操作/ 对mutations的操作
 // 对一系列的提交做封装
@@ -119,26 +119,43 @@ export const clearSearchHistory = function ({commit}) {
 
 // play-list中删除单个歌曲的action
 export const deleteSong = function ({commit, state}, song) {
-  let playList = state.playList
-  let sequenceList = state.sequenceList
+  let playList = state.playList.slice()
+  let sequenceList = state.sequenceList.slice()
   let currentIndex = state.currentIndex
-  let pindex = findindex(playList, song)
-  playList.splice(pindex, 1)
-  let sindex = findindex(sequenceList, song)
-  sequenceList.splice(sindex, 1)
+  // 将playList中的歌曲删除
+  let pIndex = findindex(playList, song)
+  playList.splice(pIndex, 1)
+  // 将sequence中的歌曲删除
+  let sIndex = findindex(sequenceList, song)
+  sequenceList.splice(sIndex, 1)
+
   /* 有两种情况下，currentIndex是需要 -1 的；
     1： 当被删除歌曲下标是在currentIndex之前，则需要将currentIndex -1
     2： 当currentIndex就是数组的最后一个时，肯定会 -1，防止pindex === currentIndex的情况
   */
-  if (currentIndex > pindex || currentIndex === playList.length) {
+  if (currentIndex > pIndex || currentIndex === playList.length) {
     currentIndex--
   }
+
   commit(types.SET_PLAY_LIST, playList)
   commit(types.SET_SEQUENCE_LIST, sequenceList)
   commit(types.SET_CURRENT_INDEX, currentIndex)
-  // 如果删空了
-  if (!playList.length) {
-    // 将播放状态暂停
-    commit(types.SET_PLAYING, false)
-  }
+  // 当列表中被删完时，需要将播放状态清空
+  // if (!playList.length) {
+  //   commit(types.SET_PLAYING, false)
+  // } else {
+  //   // 保证在删除时，歌曲是播放状态的
+  //   commit(types.SET_PLAYING, true)
+  // }
+  // 简化
+  let playingstate = playList.length > 0
+  commit(types.SET_PLAYING, playingstate)
+}
+
+// play-list的清空列表
+export const deleteSongList = function ({commit}) {
+  commit(types.SET_PLAY_LIST, [])
+  commit(types.SET_SEQUENCE_LIST, [])
+  commit(types.SET_CURRENT_INDEX, [])
+  commit(types.SET_PLAYING, false)
 }

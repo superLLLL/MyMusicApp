@@ -5,12 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-11-09 16:16:53
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 09:03:21
+ * @LastEditTime: 2019-11-10 20:22:49
  -->
 <template>
   <transition name="confirm-fade">
     <!--外层容器-->
-    <div class="confirm" v-show="isShow">
+    <!-- @click.stop让confirm更加独立不向上冒泡 -->
+    <div class="confirm" v-show="isShow" @click.stop>
       <!--中间内容的定位-->
       <div class="confirm-wrapper">
         <div class="confirm-content">

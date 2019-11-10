@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 14:03:15
+ * @LastEditTime: 2019-11-10 20:11:58
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -147,17 +147,20 @@ export default {
     cdCls() {
       return this.playing ? 'play' : 'pause'
     },
-    playIcon() { // 通过playing的值来动态改变类名，从而改变样式
+    // 通过playing的值来动态改变类名，从而改变样式
+    playIcon() {
       return this.playing ? 'icon-pause' : 'icon-play'
     },
     miniIcon() {
       return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
     },
-    getPercent() { // 将当前播放的比例时长传给progress-bar
+    // 将当前播放的比例时长传给progress-bar
+    getPercent() {
       if(this.currentTime && this.currentSong.duration)
         return this.currentTime / this.currentSong.duration
     },
-    iconMode() { // 当前播放模式
+    // 当前播放模式
+    iconMode() {
       return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
     },
     ...mapGetters([
@@ -179,16 +182,19 @@ export default {
     //     }
     //   })
     // },
-    Shrink() { // 收起播放器
+    // 收起播放器
+    Shrink() {
       this.setFullScreen(false)
     },
-    Open() {  // 展开播放器
+    // 展开播放器
+    Open() {
       this.setFullScreen(true)
     },
     showPlayList() {
       this.$refs.playList.show()
     },
-    togglePlay() { // 更改播放状态
+    // 更改播放状态
+    togglePlay() {
       if (!this.isCanPlay) {
         return
       }
@@ -197,19 +203,22 @@ export default {
         this.currentLyric.togglePlay()
       }
     },
-    end() { // audio播放结束时
+    // audio播放结束时
+    end() {
       if (this.mode === playMode.loop) { // 如果时loop模式
         this._loop()
       } else { // 其他模式正常切换
         this.next() 
       }
     }, 
-    _loop() { // loop模式的下一首歌
+    // loop模式的下一首歌
+    _loop() {
       this.$refs.audio.currentTime = 0 // 将播放事件调整为0
       this.$refs.audio.play() // 重新开始播放
       this.currentLyric.seek(0) // 歌词也偏移回到歌词开始的位置
     },
-    prev() { // 切换上一首歌
+    // 切换上一首歌
+    prev() {
       if (!this.isCanPlay) { // 播放标志位是否为可播放状态
         return
       }
@@ -227,7 +236,8 @@ export default {
         this.isCanPlay = false // 当前歌曲加载完毕后，重新设为不可播放状态
       }
     },
-    next() {  // 其余模式的切换下一首歌
+    // 其余模式的切换下一首歌
+    next() {
       if (!this.isCanPlay) {
         return
       }
@@ -245,58 +255,73 @@ export default {
         this.isCanPlay = false
       }
     },
-    canplay() { // 当前歌曲可以正常播放时 相关标志位设为true
+    // 当前歌曲可以正常播放时 相关标志位设为true
+    canplay() {
       this.isCanPlay = true
     },
-    error(err) { // 歌曲获取失败
+    // 歌曲获取失败
+    error(err) {
     // 如果没网，歌曲出现错误，都会产生这样的情况，所以我们需要为其设置true
       this.isCanPlay = true // 既保证了我们的正常使用，又可以避免我们快速点击
     },
-    disableCls() { // 当不能播放时，添加disable
+    // 当不能播放时，添加disable
+    disableCls() {
       return this.isCanPlay ? '' : 'disable'
     }, 
-    getCurrentTime(e) { // 获取当前歌曲的播放时间
+    // 获取当前歌曲的播放时间
+    getCurrentTime(e) {
       this.currentTime = e.target.currentTime
     },
-    format(interval) { // 将数字转换成分秒的形式
+    // 将数字转换成分秒的形式
+    format(interval) {
       interval = interval | 0 // 向下取整 == Math.floor()
       let minute = interval / 60 | 0
       // let second = this._pad(interval % 60 | 0)
       let second = (interval % 60 | 0).toString().padStart(2, '0') // es6的padStart方法
       return `${minute}:${second}`
     },
-    OnProgressBarChange(percent) { // 改变当前播放位置 
+    // 改变当前播放位置 
+    OnProgressBarChange(percent) {
       const currentTime = this.currentSong.duration * percent
       this.$refs.audio.currentTime = currentTime // audio的currentTime是一个可读可写的属性
-      if (!this.playing) { // 如果通过移动得到的位置且处于暂停状态，则播放
+      // 如果通过移动得到的位置且处于暂停状态，则播放
+      if (!this.playing) {
         this.togglePlay()
       }
       if (this.currentLyric) {
-        this.currentLyric.seek(currentTime * 1000) // 歌词跳转到当前歌曲播放时间的位置，单位ms
+        // 歌词跳转到当前歌曲播放时间的位置，单位ms
+        this.currentLyric.seek(currentTime * 1000)
       }
     },
     changeMode() {
-      const mode = (this.mode + 1) % 3 // 当前播放模式的下一种，一共3种
-      this.setMode(mode) // 改变当前播放模式
+      // 当前播放模式的下一种，一共3种
+      const mode = (this.mode + 1) % 3
+      // 改变当前播放模式
+      this.setMode(mode)
       let list = null 
-      if (mode === playMode.random) { // 如果当前播放模式为随机
+      // 如果当前播放模式为随机
+      if (mode === playMode.random) {
         list = shuffle(this.sequenceList) // 将原始播放列表随机排序
       } else { // 其他的情况下
         list = this.sequenceList
       }
-      this.resetCurrentSongIndex(list) // 修改改变列表后的歌曲下标
-      this.setPlayList(list) // 将当前模式相应的列表赋给播放列表
+      // 修改改变列表后的歌曲下标
+      this.resetCurrentSongIndex(list)
+      // 将当前模式相应的列表赋给播放列表
+      this.setPlayList(list)
     },
     resetCurrentSongIndex(list) {
       let index = list.findIndex((item) => { // 返回匹配下标
         return item.id === this.currentSong.id
       })
-      this.setCurrentIndex(index) // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
+       // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
+      this.setCurrentIndex(index)
     },
     getLyric() { // 返回的获取歌词的异步函数
       this.currentSong.getLyric().then((lyric) => { 
         this.currentLyric = new Lyric(lyric, this.handleLyric)
-        if (this.playing) { // 如果当前歌曲正在播放状态则播放歌词
+         // 如果当前歌曲正在播放状态则播放歌词
+        if (this.playing) {
           this.currentLyric.play()
         }
         // console.log(this.currentLyric)
@@ -306,7 +331,8 @@ export default {
         this.currentLineNum = 0  // 歌词下标
       })
     },
-    handleLyric({lineNum, txt}) { // lyric的回调函数，返回当前的播放时间对应的歌词下标
+    // lyric的回调函数，返回当前的播放时间对应的歌词下标
+    handleLyric({lineNum, txt}) {
       this.currentLineNum = lineNum
       // 歌词滚动
       if (lineNum > 5) {
@@ -317,37 +343,46 @@ export default {
       }
       this.playingLyric = txt // 直接获得当前播放时间的歌词
     },
-    middleTouchStart(e) { // 移动开始，将起始点信息保存
+    // 移动开始，将起始点信息保存
+    middleTouchStart(e) {
       this.touch.initiated = true // 初始化标志 
       let touche = e.touches[0]
       this.touch.startX = touche.pageX // X轴坐标
       this.touch.startY = touche.pageY // Y轴坐标
 
     },
-    middleTouchMove(e) { // 移动阶段，获得偏移量，完成偏移
+    // 移动阶段，获得偏移量，完成偏移
+    middleTouchMove(e) {
       if (!this.touch.initiated) { //检测是否初始化
           return
       }
       let touche = e.touches[0] 
       const resultX = touche.pageX - this.touch.startX // X轴偏移量
       const resultY = touche.pageY - this.touch.startY // Y轴偏移量
-      if (Math.abs(resultY) > Math.abs(resultX)) { // 当纵向移动时，不予提供切换交互
+       // 当纵向移动时，不予提供切换交互
+      if (Math.abs(resultY) > Math.abs(resultX)) {
         return
       }
       const left = this.currentShow === 'cd' ? 0 : -window.innerWidth // left的偏移量要么是0， 要么是负的window的宽度，两种状态
       // 首先，我们只有能取到最大为0的width，然后我们可以取到最小不能超出屏幕的innerwidth, 根据left值加上resultX得出当前宽度；当我们从一开始左划时，left为0，所以这时left+resultX是最大的，当滑动到最后了，currentShow为‘lyric’时，left为-window.innerWidth，则此时-window.innerWidth最大
       const offsetWidth = Math.min(0, Math.max(-window.innerWidth, left + resultX))
-      this.touch.percent = Math.abs(offsetWidth / window.innerWidth) // 获得当前偏移比例
-      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)` // lyricList是一个Scorll的vue组件是访问不到DOM，只能通过$el访问
+      // 获得当前偏移比例
+      this.touch.percent = Math.abs(offsetWidth / window.innerWidth)
+      // lyricList是一个Scorll的vue组件是访问不到DOM，只能通过$el访问
+      this.$refs.lyricList.$el.style[transform] = `translate3d(${offsetWidth}px,0,0)`
       this.$refs.lyricList.$el.style[transitionDuration] = '0ms'
-      this.$refs.middleL.style.opacity = 1 - this.touch.percent // 透明度根据当前偏移量来动态设置
+      // 透明度根据当前偏移量来动态设置
+      this.$refs.middleL.style.opacity = 1 - this.touch.percent
       this.$refs.middleL.style[transitionDuration] = '0ms'
     },
-    middleTouchEnd() { // 滑动结束，完成切换
+    // 滑动结束，完成切换
+    middleTouchEnd() {
       let offsetWidth
       let opacity
-      if (this.currentShow === 'cd') { // 当页面为唱片时 从右向左划
-        if (this.touch.percent > 0.1) { // 滑动了超过10%时
+      // 当页面为唱片时 从右向左划
+      if (this.currentShow === 'cd') {
+        // 滑动了超过10%时
+        if (this.touch.percent > 0.1) {
           opacity = 0
           offsetWidth = -window.innerWidth
           this.currentShow = 'lyric'
@@ -355,8 +390,10 @@ export default {
           opacity = 1
           offsetWidth = 0
         }
-      } else {  // 当页面为歌词时 从左向右划
-        if (this.touch.percent < 0.9) { // 滑动超过了90%, 实际上原本是100%，也就是滑动超过10%了再切换回唱片
+        // 当页面为歌词时 从左向右划
+      } else {
+        // 滑动超过了90%, 实际上原本是100%，也就是滑动超过10%了再切换回唱片
+        if (this.touch.percent < 0.9) {
           opacity = 1
           offsetWidth = 0
           this.currentShow = 'cd'
@@ -404,20 +441,23 @@ export default {
           easing: 'linear'
         }
       })
-
-      animations.runAnimation(this.$refs.cdWrapper, 'move', done) // 运行动画，并执行回调函数
+      // 运行动画，并执行回调函数
+      animations.runAnimation(this.$refs.cdWrapper, 'move', done)
     },
     afterEnter() {
-        animations.unregisterAnimation('move') // 注销动画
+        // 注销动画
+        animations.unregisterAnimation('move')
         this.$refs.cdWrapper.style.animation = ''
     },
-    leave(el, done) { // leave时的动画
+    // leave时的动画
+    leave(el, done) {
       this.$refs.cdWrapper.style.transition = 'all 0.4s'
       const {x, y, scale} = this._getPosAndScale()
       this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
       this.$refs.cdWrapper.addEventListener('transitionend', done)
     },
-    afterLeave() { // 一定要清空动画
+    // 一定要清空动画
+    afterLeave() {
       this.$refs.cdWrapper.style.transition = ''
       this.$refs.cdWrapper.style[transform] = ''
     },
@@ -427,10 +467,14 @@ export default {
       const paddingLeft = 40 
       const paddingBottom = 30
       const paddingTop = 80
-      const width = window.innerWidth * 0.8 // 大图标的宽度=视口宽度 * 0.8 因为其宽度为80%
-      const scale = targetWidth / width // 获得比例
-      const x = -(window.innerWidth / 2 - paddingLeft)  // 大图标x
-      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom // 大图标y
+      // 大图标的宽度=视口宽度 * 0.8 因为其宽度为80%
+      const width = window.innerWidth * 0.8
+      // 获得比例
+      const scale = targetWidth / width
+      // 大图标x
+      const x = -(window.innerWidth / 2 - paddingLeft)
+      // 大图标y
+      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
       return {x,y,scale}
     },
     ...mapMutations({ // 映射出方法
@@ -448,10 +492,16 @@ export default {
     //   console.log(this.currentSong);
     // },
     currentSong(newSong, oldSong) {
-      if (newSong.id === oldSong.id) { // 因为上面对下标做了改变，所以会触发watch；所以要对其回调函数设置新旧值的歌曲id是一样的则返回
+      // 边界条件：删除列表歌曲造成currentSong为空，会导致下面的if比较出现报错
+      if (!newSong.id) {
+        return 
+      }
+      // 因为上面对下标做了改变，所以会触发watch；所以要对其回调函数设置新旧值的歌曲id是一样的则返回 
+      if (newSong.id === oldSong.id) {
         return
       }
-      if (this.currentLyric) { // 在重新new currentLyric之前先把 当前的currentLyric停止
+      // 在重新new currentLyric之前先把 当前的currentLyric停止
+      if (this.currentLyric) {
         this.currentLyric.stop()
       }
       // 使用setTimeout保证从后台切换到前台时，能够正常播放
@@ -460,10 +510,12 @@ export default {
         this.getLyric()
       },1000)
     },
-    playing(newPlaying) { // 监视playing数据
+    // 监视playing数据
+    playing(newPlaying) {
       const audio = this.$refs.audio
       this.$nextTick(() => {
-        newPlaying ? audio.play() : audio.pause() // 三元设置audio的播放状态
+        // 三元设置audio的播放状态
+        newPlaying ? audio.play() : audio.pause()
       })
     }
   },

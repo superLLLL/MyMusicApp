@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-10 12:54:01
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 16:47:32
+ * @LastEditTime: 2019-11-10 20:25:36
  -->
 <template>
   <transition name="list-fade">
@@ -15,21 +15,25 @@
           <h1 class="title">
             <i class="icon"></i>
             <span class="text"></span>
-            <span class="clear"><i class="icon-clear"></i></span>
+            <span class="clear" @click="showConfirm"><i class="icon-clear"></i></span>
           </h1>
         </div>
         <scroll ref="scroll" :data="sequenceList" class="list-content">
           <ul>
-            <li ref="listItem" class="item" @click="selectItem(item, index)" v-for="(item, index) in sequenceList">
-              <i class="current" :class="currentIconCls(item)"></i>
-              <span class="text">{{item.name}}</span>
-              <span class="like">
-                <i class="icon-not-favorite"></i>
-              </span>
-              <span class="delete" @click.stop="deleteOne(item)">
-                <i class="icon-delete"></i>
-              </span>
-            </li>
+            <!-- vue专门用于列表的transition--transitiongroup tag将transition-group渲染成相应的标签-->
+            <transition-group name="list" tag="ul">
+              <!-- transition-group的子元素需要一个key：区分每个元素 -->
+              <li :key="item.id" ref="listItem" class="item" @click="selectItem(item, index)" v-for="(item, index) in sequenceList">
+                <i class="current" :class="currentIconCls(item)"></i>
+                <span class="text">{{item.name}}</span>
+                <span class="like">
+                  <i class="icon-not-favorite"></i>
+                </span>
+                <span class="delete" @click.stop="deleteOne(item)">
+                  <i class="icon-delete"></i>
+                </span>
+              </li>
+            </transition-group>
           </ul>
         </scroll>
         <div class="list-operate">
@@ -42,8 +46,8 @@
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref="confirm" @confirm="confirmClear"  text="是否清空列表" confirmBtnText="清空"></confirm>
     </div>
-
   </transition>
 </template>
 
@@ -51,6 +55,7 @@
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import Scroll from 'base/scroll/scroll'
 import { playMode } from 'common/js/config'
+import Confirm from 'base/confirm/confirm'
 
 
 export default {
@@ -91,7 +96,20 @@ export default {
     // 删除单个歌曲
     deleteOne(item) {
       this.deleteSong(item)
+      // 删完列表后，在播放一首歌时，会直接显示歌曲列表，所以要hide() 
+      if (!this.playList.length) {
+        this.hide()
+      }
     },
+    // 显示confirm
+    showConfirm() {
+      this.$refs.confirm.show()
+    },
+    // 通过了点击confirm中确定按钮而传上来的事件
+    confirmClear() {
+      this.deleteSongList()
+      this.hide()
+    },  
     // 自动滚动到正在播放的歌曲
     scrollToElem(item) {
       // 找到其位置
@@ -120,7 +138,8 @@ export default {
       setPlayState: 'SET_PLAYING'
     }),
     ...mapActions([
-      'deleteSong'
+      'deleteSong',
+      'deleteSongList'
     ])
   },
   watch: {
@@ -133,7 +152,8 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Confirm
   }
 }
 </script>
@@ -154,7 +174,7 @@ export default {
     &.list-fade-enter-active, &.list-fade-leave-active
       transition: opacity 0.3s
       .list-wrapper
-        transition: all 0.3s
+        transition: all 0.5s
     &.list-fade-enter, &.list-fade-leave-to
       opacity: 0
       .list-wrapper
@@ -195,7 +215,7 @@ export default {
           padding: 0 30px 0 20px
           overflow: hidden
           &.list-enter-active, &.list-leave-active
-            transition: all 0.1s
+            transition: all 0.2s linear
           &.list-enter, &.list-leave-to
             height: 0
           .current
