@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 09:51:29
+ * @LastEditTime: 2019-11-10 12:50:19
  -->
 <template>
   <div class="search">
@@ -89,8 +89,9 @@ export default {
         }
       })
     },
-    // 当mini播放器导致滚动底部不可见时
+    // 当mini播放器导致滚动底部不可见时·
     handlePlayList(playList) {
+      // 当前有播放时bottom为60px，否则无
       const bottom = playList.length > 0 ? "60px" : ''
 
       this.$refs.shortWrapper.style.bottom = bottom
@@ -99,7 +100,6 @@ export default {
       this.$refs.searchResult.style.bottom = bottom
       // 通过代理来调用suggest中的scroll的refresh
       this.$refs.suggest.refresh()
-
     },
     saveSearch() {
       this.saveSearchHistory(this.query)

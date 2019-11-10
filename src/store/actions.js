@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:06:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 15:56:03
+ * @LastEditTime: 2019-11-10 16:53:25
  */
 // 异步操作/ 对mutations的操作
 // 对一系列的提交做封装
@@ -115,4 +115,30 @@ export const deleteSearchHistory = function ({commit}, query) {
 // 先将storage中的内容清除,再存入state中的searchHistory
 export const clearSearchHistory = function ({commit}) {
   commit(types.SET_SEARCH_HISTORY, clearSearch())
+}
+
+// play-list中删除单个歌曲的action
+export const deleteSong = function ({commit, state}, song) {
+  let playList = state.playList
+  let sequenceList = state.sequenceList
+  let currentIndex = state.currentIndex
+  let pindex = findindex(playList, song)
+  playList.splice(pindex, 1)
+  let sindex = findindex(sequenceList, song)
+  sequenceList.splice(sindex, 1)
+  /* 有两种情况下，currentIndex是需要 -1 的；
+    1： 当被删除歌曲下标是在currentIndex之前，则需要将currentIndex -1
+    2： 当currentIndex就是数组的最后一个时，肯定会 -1，防止pindex === currentIndex的情况
+  */
+  if (currentIndex > pindex || currentIndex === playList.length) {
+    currentIndex--
+  }
+  commit(types.SET_PLAY_LIST, playList)
+  commit(types.SET_SEQUENCE_LIST, sequenceList)
+  commit(types.SET_CURRENT_INDEX, currentIndex)
+  // 如果删空了
+  if (!playList.length) {
+    // 将播放状态暂停
+    commit(types.SET_PLAYING, false)
+  }
 }

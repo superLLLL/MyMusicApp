@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 19:30:06
+ * @LastEditTime: 2019-11-10 14:03:15
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -101,11 +101,12 @@
               <i :class="miniIcon" @click.stop="togglePlay" class="icon-mini"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlayList">
           <i class="icon-playlist"></i>
         </div>
       </div> 
     </transition>
+    <play-list ref="playList"></play-list>
     <audio :src="currentSong.url" @canplay="canplay" @error="error" ref="audio" @timeupdate="getCurrentTime" @ended="end"></audio>
   </div>
 </template>
@@ -122,6 +123,7 @@ import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
 import { getSongVkey } from 'api/song'
 import { ERR_OK } from 'api/config'
+import PlayList from 'components/playlist/playlist'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
@@ -182,6 +184,9 @@ export default {
     },
     Open() {  // 展开播放器
       this.setFullScreen(true)
+    },
+    showPlayList() {
+      this.$refs.playList.show()
     },
     togglePlay() { // 更改播放状态
       if (!this.isCanPlay) {
@@ -465,7 +470,8 @@ export default {
   components:{
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    PlayList
   }
 }
 </script>
