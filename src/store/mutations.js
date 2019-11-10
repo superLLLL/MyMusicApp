@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:05:38
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 13:42:28
+ * @LastEditTime: 2019-11-09 10:25:52
  */
 // 定义修改操作，mutation就是多个方法的集合
 import * as types from './mutation-types'
@@ -36,6 +36,15 @@ const mutations = {
   },
   [types.SET_DISC](state, list) {
     state.disc = list
+  },
+  [types.SET_TOPLIST](state, toplist) {
+    state.topList = toplist
+  },
+  [types.SET_SONGMID](state, list) {
+    state.songMid = list.mid
+  },
+  [types.SET_SEARCH_HISTORY](state, list) {
+    state.searchHistory = list
   }
 }
 

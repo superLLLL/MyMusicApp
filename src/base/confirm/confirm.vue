@@ -1,12 +1,23 @@
+<!--
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-11-09 16:16:53
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-11-10 09:03:21
+ -->
 <template>
   <transition name="confirm-fade">
-    <div class="confirm" v-show="showFlag" @click.stop>
+    <!--外层容器-->
+    <div class="confirm" v-show="isShow">
+      <!--中间内容的定位-->
       <div class="confirm-wrapper">
         <div class="confirm-content">
           <p class="text">{{text}}</p>
           <div class="operate">
-            <div @click="cancel" class="operate-btn left">{{cancelBtnText}}</div>
-            <div @click="confirm" class="operate-btn">{{confirmBtnText}}</div>
+            <div class="operate-btn left" @click="cancel">{{cancelBtnText}}</div>
+            <div class="operate-btn" @click="confirm">{{confirmBtnText}}</div>
           </div>
         </div>
       </div>
@@ -14,47 +25,50 @@
   </transition>
 </template>
 
-<script type="text/ecmascript-6">
-  export default {
-    props: {
-      text: {
-        type: String,
-        default: ''
-      },
-      confirmBtnText: {
-        type: String,
-        default: '确定'
-      },
-      cancelBtnText: {
-        type: String,
-        default: '取消'
-      }
+<script>
+export default {
+  props: {
+    text: { // 弹窗文案
+      type: String,
+      default: ""
     },
-    data() {
-      return {
-        showFlag: false
-      }
+    confirmBtnText: {
+      type: String,
+      default: '确定'
     },
-    methods: {
-      show() {
-        this.showFlag = true
-      },
-      hide() {
-        this.showFlag = false
-      },
-      cancel() {
-        this.hide()
-        this.$emit('cancel')
-      },
-      confirm() {
-        this.hide()
-        this.$emit('confirm')
-      }
+    cancelBtnText: {
+      type: String,
+      default: '取消'
+    }
+    
+  },
+  data() {
+    return {
+      isShow: false // 显示标志位
+    }
+  },
+  methods: {
+    show() { // 显示
+      this.isShow = true
+    },
+    hide() { // 隐藏
+      this.isShow = false
+    },
+    // 点击取消时
+    cancel() {  
+      this.hide()
+      this.$emit('cancel')
+    },
+    // 点击确定时
+    confirm() {
+      this.hide()
+      this.$emit('confirm')
     }
   }
+}
 </script>
 
-<style scoped lang="stylus" rel="stylesheet/stylus">
+<style lang="stylus" scoped>
   @import "~common/stylus/variable"
 
   .confirm
@@ -65,6 +79,7 @@
     bottom: 0
     z-index: 998
     background-color: $color-background-d
+    // 总体过渡样式
     &.confirm-fade-enter-active
       animation: confirm-fadein 0.3s
       .confirm-content
@@ -84,10 +99,10 @@
           line-height: 22px
           text-align: center
           font-size: $font-size-large
-          color: $color-text-l
         .operate
           display: flex
           align-items: center
+          justify-content: center
           text-align: center
           font-size: $font-size-large
           .operate-btn
@@ -98,18 +113,16 @@
             color: $color-text-d
             &.left
               border-right: 1px solid $color-background-d
-
-  @keyframes confirm-fadein
-    0%
-      opacity: 0
-    100%
-      opacity: 1
-
-  @keyframes confirm-zoom
-    0%
-      transform: scale(0)
-    50%
-      transform: scale(1.1)
-    100%
-      transform: scale(1)
+@keyframes confirm-fadein
+  0%
+    opacity: 0
+  100% 
+    opacity: 1
+@keyframes confirm-zoom
+  0%
+    transfrom: scale(0)
+  50%
+    transform: scale(1.1)
+  100%
+    transform: scale(1)
 </style>

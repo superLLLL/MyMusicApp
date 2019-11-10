@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-06 16:48:58
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 08:40:30
+ * @LastEditTime: 2019-11-10 09:50:03
  -->
 <template>
   <scroll class="suggest"
@@ -162,6 +162,10 @@ export default {
         }
       })
       return ret
+    },
+    // 让父组件 能够调用到该组件中的scroll的refresh
+    refresh() {
+      this.$refs.scroll.refresh()
     },
     ...mapMutations({
       // 把对mutation的修改映射成方法,此处为方法  SET_SINGER

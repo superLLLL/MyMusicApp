@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-09 08:45:25
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 09:46:26
+ * @LastEditTime: 2019-11-09 15:56:11
  */
 // storage相关缓存逻辑
 
@@ -32,6 +32,16 @@ function insertArray(arr, val, compare, maxlen) {
     arr.pop()
   }
 }
+
+// 删除数组中的值
+function deleteArray(arr, compare) {
+  const index = arr.findIndex(compare)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+}
+
+// 保存搜素
 export function saveSearch(query) {
   // 获得 search的缓存数组，没有的话就为[]
   let searches = storage.get(SEARCH_KEY, [])
@@ -41,6 +51,21 @@ export function saveSearch(query) {
   // 再存进去
   storage.set(SEARCH_KEY, searches)
   return searches
+}
+
+// 删除搜素
+export function deleteSearch(query) {
+  let searches = storage.get(SEARCH_KEY, [])
+  deleteArray(searches, (item) => {
+    return item === query
+  })
+  storage.set(SEARCH_KEY, searches)
+  return searches
+}
+
+export function clearSearch() {
+  storage.remove(SEARCH_KEY)
+  return []
 }
 
 export function loadStorage() {

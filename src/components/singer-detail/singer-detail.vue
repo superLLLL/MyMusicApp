@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 14:21:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-04 15:16:54
+ * @LastEditTime: 2019-11-08 12:44:40
  -->
 <template>
     <transition name="slide">
@@ -26,13 +26,16 @@ export default {
         }
     },
     computed: {
-        title() {  // 抽象出歌手名
-            return this.singer.items
+        // 抽象出歌手名
+        title() {
+            return this.singer.name
         },
-        bgImg() {  // 抽象出歌手的图片
+        // 抽象出歌手的图片
+        bgImg() {
             return this.singer.avatar
         },
-        ...mapGetters([  // 将state中的singer取出来使用
+        // 将state中的singer取出来使用
+        ...mapGetters([
             'singer'
         ]),
         ...mapMutations([
@@ -45,11 +48,12 @@ export default {
     methods: {
         _getDeatil() {
             // 如果需要获取的歌手信息没有拿到（比如直接在singer_detail页面加载），则跳回去
-            if(typeof this.singer.no != 'number') {
+            if(typeof this.singer.no !== "number") {
                 this.$router.push('/singer')
                 return  // router是异步路由，怕浏览器会报错，所以直接return出去
             }
-            getSingerDetail(this.singer.no).then((res) => { // 获取歌手详细信息
+            // 获取歌手详细信息
+            getSingerDetail(this.singer.mid).then((res) => {
                 if(res.code === ERR_OK){
                     // 调用_normalizeSongs方法获取歌曲信息
                     this.songs = this._normalizeSongs(res.singerSongList.data.songList)
@@ -57,7 +61,8 @@ export default {
                 }
             })
         },
-        _normalizeSongs(list) {  // 创建Song对象，获取歌曲的信息
+        // 创建Song对象，获取歌曲的信息
+        _normalizeSongs(list) {
             let ret = []
             list.forEach(element => {
                 // console.log(element);
