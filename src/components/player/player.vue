@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 20:11:58
+ * @LastEditTime: 2019-11-11 13:52:26
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -94,7 +94,7 @@
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.singer"></h2>
-          <p class="desc" v-html='currentSong.album'></p>
+          <p class="desc" v-html='currentSong.name'></p>
         </div>
         <div class="control">
           <progress-circle :radius="radius" :percent="getPercent">
@@ -124,10 +124,14 @@ import Scroll from 'base/scroll/scroll'
 import { getSongVkey } from 'api/song'
 import { ERR_OK } from 'api/config'
 import PlayList from 'components/playlist/playlist'
+import { playerMixin } from 'common/js/mixin'
+
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 export default {
+  // 复用了iconMode
+  mixins: [playerMixin],
   data() {
     return {
       isCanPlay: false, // 是否可以播放标志位
@@ -159,18 +163,14 @@ export default {
       if(this.currentTime && this.currentSong.duration)
         return this.currentTime / this.currentSong.duration
     },
-    // 当前播放模式
-    iconMode() {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
+    // // 当前播放模式
+    // iconMode() {
+    //   return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+    // },
     ...mapGetters([
-      'playList', // 播放列表
       'fullScreen', // 播放的形式 全屏 or 缩小
-      'currentSong', // 歌曲的信息
       'playing', // 播放状态
       'currentIndex', // 歌曲的下标
-      'mode', // 歌曲播放模式
-      'sequenceList', // 歌曲的原始列表
       'songMid' // 歌曲号
     ]),
   },
@@ -292,30 +292,6 @@ export default {
         // 歌词跳转到当前歌曲播放时间的位置，单位ms
         this.currentLyric.seek(currentTime * 1000)
       }
-    },
-    changeMode() {
-      // 当前播放模式的下一种，一共3种
-      const mode = (this.mode + 1) % 3
-      // 改变当前播放模式
-      this.setMode(mode)
-      let list = null 
-      // 如果当前播放模式为随机
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList) // 将原始播放列表随机排序
-      } else { // 其他的情况下
-        list = this.sequenceList
-      }
-      // 修改改变列表后的歌曲下标
-      this.resetCurrentSongIndex(list)
-      // 将当前模式相应的列表赋给播放列表
-      this.setPlayList(list)
-    },
-    resetCurrentSongIndex(list) {
-      let index = list.findIndex((item) => { // 返回匹配下标
-        return item.id === this.currentSong.id
-      })
-       // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
-      this.setCurrentIndex(index)
     },
     getLyric() { // 返回的获取歌词的异步函数
       this.currentSong.getLyric().then((lyric) => { 
@@ -478,11 +454,7 @@ export default {
       return {x,y,scale}
     },
     ...mapMutations({ // 映射出方法
-      setFullScreen : 'SET_FULL_SCREEN', // 播放器状态
-      setPlaying: 'SET_PLAYING', // 播放器播放/暂停
-      setCurrentIndex : 'SET_CURRENT_INDEX', // 当前播放歌曲的index
-      setMode : 'SET_MODE', // 歌曲的播放模式
-      setPlayList: 'SET_PLAY_LIST' // 修改当前歌曲的播放列表
+      setFullScreen: 'SET_FULL_SCREEN', // 播放器状态
     })
   },
   watch: {
