@@ -5,11 +5,11 @@
  * @Author: Xuhua
  * @Date: 2019-11-03 19:19:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 13:38:09
+ * @LastEditTime: 2019-11-11 18:52:21
  */
 // 多个组件中相同逻辑的js代码，导入到组件中，则同名覆盖，不同名直接用
 // 此为结束scroll底部被mini播放器挡住，导致无法滚动到底部的问题
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
 
@@ -82,5 +82,47 @@ export const playerMixin = {
       setMode: 'SET_MODE', // 歌曲的播放模式
       setPlayList: 'SET_PLAY_LIST' // 修改当前歌曲的播放列表
     })
+  }
+}
+
+// mixin化搜索历史的js代码
+export const searchMixin = {
+  data() {
+    return {
+      query: '' // 存入搜索字符串
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'searchHistory'
+    ])
+  },
+  methods: {
+    // 点击搜索热门后，将值输入到input
+    setQuery(query) {
+      // 将点击的热门搜索作为搜索字段传送到search-box
+      this.$refs.searchBox.setQuery(query)
+    },
+    // 保存到localStorage
+    saveSearch() {
+      this.saveSearchHistory(this.query)
+    },
+    // 移动端键盘隐藏
+    blurInput() {
+      this.$refs.searchBox.blur()
+    },
+    // search-box传上来的搜索字符串query
+    onQueryChange(query) { 
+      this.query = query
+    },
+    // 保存到localHistory
+    saveSearch() {
+      this.saveSearchHistory(this.query)
+    },
+    ...mapActions([
+      'saveSearchHistory',
+      'deleteSearchHistory',
+      'clearSearchHistory'
+    ])
   }
 }

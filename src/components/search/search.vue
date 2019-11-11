@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-10 12:50:19
+ * @LastEditTime: 2019-11-11 19:09:35
  -->
 <template>
   <div class="search">
@@ -52,15 +52,14 @@ import { mapActions, mapGetters } from 'vuex'
 import SearchList from 'base/search-list/search-list'
 import Confirm from 'base/confirm/confirm'
 import Scroll from 'base/scroll/scroll'
-import { playListMixin } from 'common/js/mixin'
+import { playListMixin, searchMixin } from 'common/js/mixin'
 
 
 export default {
-  mixins: [playListMixin],
+  mixins: [playListMixin, searchMixin],
   data() {
     return {
       hotkey: [], // 存放热门搜索
-      query: '' // 传入的搜索字段
     }
   },
   created() {
@@ -70,17 +69,9 @@ export default {
     // 每当hotkey或者searchHistory发生变化时，都会改变该返回值
     shortcut() {
       return this.hotkey.concat(this.searchHistory)
-    },
-    ...mapGetters([
-      'searchHistory'
-    ])
+    }
   },
   methods: {
-    // 点击搜索热门后，将值输入到input
-    setQuery(query) {
-     // 将点击的热门搜索作为搜索字段传送到search-box
-      this.$refs.searchBox.setQuery(query)
-    },
      // 请求搜索热门的数据
     _getHotKey() {
       getHotKey().then((res) => {
@@ -101,9 +92,6 @@ export default {
       // 通过代理来调用suggest中的scroll的refresh
       this.$refs.suggest.refresh()
     },
-    saveSearch() {
-      this.saveSearchHistory(this.query)
-    },
      // 可以直接在@click="deleteSearchHistory"
     deleteOne(item) {
       this.deleteSearchHistory(item)
@@ -114,19 +102,7 @@ export default {
     },
     showConfirm() {
       this.$refs.confirm.show()
-    },
-    // search-box传上来的值
-    onQueryChange(query) { 
-      this.query = query
-    },
-    blurInput() {
-      this.$refs.searchBox.blur()
-    },
-    ...mapActions([
-      'saveSearchHistory',
-      'deleteSearchHistory',
-      'clearSearchHistory'
-    ])
+    }
   },
   watch:{
     // 监听query，当其变化时，需要搜索的scroll进行refresh

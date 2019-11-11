@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-10 12:54:01
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 13:57:15
+ * @LastEditTime: 2019-11-11 14:35:27
  -->
 <template>
   <transition name="list-fade">
@@ -38,7 +38,7 @@
           </ul>
         </scroll>
         <div class="list-operate">
-          <div class="add">
+          <div class="add" @click="showAddSong">
             <i class="icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
@@ -48,6 +48,7 @@
         </div>
       </div>
       <confirm ref="confirm" @confirm="confirmClear"  text="是否清空列表" confirmBtnText="清空"></confirm>
+      <add-song ref="addSong"></add-song>
     </div>
   </transition>
 </template>
@@ -58,6 +59,7 @@ import Scroll from 'base/scroll/scroll'
 import { playMode } from 'common/js/config'
 import Confirm from 'base/confirm/confirm'
 import { playerMixin } from 'common/js/mixin'
+import AddSong from 'components/add-song/add-song'
 
 
 export default {
@@ -110,7 +112,10 @@ export default {
     confirmClear() {
       this.deleteSongList()
       this.hide()
-    },  
+    },
+    showAddSong() {
+      this.$refs.addSong.show()
+    },
     // 自动滚动到正在播放的歌曲
     scrollToElem(item) {
       // 找到其位置
@@ -150,7 +155,8 @@ export default {
   },
   components: {
     Scroll,
-    Confirm
+    Confirm,
+    AddSong
   }
 }
 </script>
