@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:07:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 10:28:32
+ * @LastEditTime: 2019-11-12 11:10:26
  */
 // 包装state的数据，可以去出去
 export const singer = state => state.singer
@@ -22,3 +22,4 @@ export const disc = state => state.disc
 export const topList = state => state.topList
 export const songMid = state => state.songMid
 export const searchHistory = state => state.searchHistory
+export const playHistory = state => state.playHistory

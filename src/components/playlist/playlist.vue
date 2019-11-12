@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-10 12:54:01
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 14:35:27
+ * @LastEditTime: 2019-11-12 21:56:42
  -->
 <template>
   <transition name="list-fade">
@@ -137,7 +137,7 @@ export default {
       // console.log(index);
       this.setCurrentIndex(index) 
       // 将切换歌曲后，播放状态保持在播放
-      this.setPlayState(true)
+      this.setPlaying(true)
     },
     ...mapActions([
       'deleteSong',

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-11 14:07:36
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 19:17:53
+ * @LastEditTime: 2019-11-12 22:17:54
  -->
  <!-- 歌曲添加到列表的组件 -->
 <template>
@@ -22,8 +22,25 @@
       <div class="search-box-wrapper">
         <search-box @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
-      <!-- 没有请求字段时,什么都不显示 -->
-      <div class="shortcut" v-show="!query"></div>
+      <!-- 没有搜索字符串时,显示最近播放和历史搜索 -->
+      <div class="shortcut" v-show="!query">
+        <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
+        <div class="list-wrapper">
+          <!-- 最近播放 -->
+          <scroll class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
+            <div class="list-inner">
+              <song-list :songs="playHistory"></song-list>
+            </div>
+          </scroll>
+          <!-- 搜索记录 -->
+          <scroll class="list-scroll" v-else="currentIndex === 1" :data="searchHistory">
+            <div class="list-inner">
+              <song-list :songs="searchHistory"></song-list>
+            </div>
+          </scroll>
+        </div>
+      </div>
+      <!-- 有搜索字符串时，显示搜索结果 -->
       <div class="search-result" v-show="query">
         <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
@@ -35,6 +52,10 @@
 import SearchBox from 'base/search-box/search-box'
 import Suggest from 'components/suggest/suggest'
 import { searchMixin } from 'common/js/mixin'
+import Switches from 'base/switches/switches'
+import Scroll from 'base/scroll/scroll'
+import { mapGetters } from 'vuex'
+import SongList from 'base/song-list/song-list'
 
 export default {
   mixins: [searchMixin],
@@ -43,8 +64,19 @@ export default {
       // 显示标志位：初始化不显示
       isShow: false,
       // 不要歌手,用于search-box
-      showSinger: false
+      showSinger: false,
+      switches: [
+        {name: '最近播放'},
+        {name: '历史搜索'}
+      ],
+      currentIndex: 0
     }
+  },
+  computed: {
+    ...mapGetters([
+      'playHistory',
+      'searchHistory',
+    ])
   },
   methods: {
     show() {
@@ -56,12 +88,17 @@ export default {
     // 将传上来的搜索记录进行保存在localStorage中
     selectSuggest() {
       this.saveSearch()
+    },
+    switchItem(index) {
+      this.currentIndex = index
     }
-    
   },
   components: {
     SearchBox,
-    Suggest
+    Suggest,
+    Switches,
+    Scroll,
+    SongList
   }
 }
 </script>

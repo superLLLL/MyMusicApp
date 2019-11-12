@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-09 08:45:25
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 15:56:11
+ * @LastEditTime: 2019-11-12 21:46:31
  */
 // storage相关缓存逻辑
 
@@ -13,6 +13,9 @@ import storage from 'good-storage'
 // 为每一个存储都定义一个key
 const SEARCH_KEY = '__search__' // 双下划线，与外部冲突很小，一般内部使用
 const MAX_LENGTH = 15 // 历史记录的最大长度
+
+const PLAY_KEY = '__play__'
+const PLAY_MAX_LENGTH = 200
 
 function insertArray(arr, val, compare, maxlen) {
   // findIndex可以使用函数字面量当回调函数使用；这样从外部传来的函数大大提高了函数的复用性
@@ -70,4 +73,21 @@ export function clearSearch() {
 
 export function loadStorage() {
   return storage.get(SEARCH_KEY, [])
+}
+
+// 将播放记录保存在本地localstorage中
+export function savePlay(song) {
+  let songs = storage.get(PLAY_KEY, [])
+  // 插入歌曲数据
+  insertArray(songs, song, (item) => {
+    return item.id === song.id
+  }, PLAY_MAX_LENGTH)
+  storage.set(PLAY_KEY, songs)
+  return songs
+}
+
+// 获取播放记录
+export function loadPlay() {
+  let songs = storage.get(PLAY_KEY, [])
+  return songs
 }

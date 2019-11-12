@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 13:52:26
+ * @LastEditTime: 2019-11-12 11:16:27
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -112,7 +112,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations} from 'vuex'
+import { mapGetters, mapMutations, mapActions} from 'vuex'
 import animations from 'create-keyframe-animation'
 import { prefixStyle } from 'common/js/dom'
 import ProgressCircle from 'base/progress-circle/progress-circle'
@@ -258,6 +258,8 @@ export default {
     // 当前歌曲可以正常播放时 相关标志位设为true
     canplay() {
       this.isCanPlay = true
+      // 能够正常播放时，将其保存到playHistory：播放历史
+      this.savePlayHistory(this.currentSong)
     },
     // 歌曲获取失败
     error(err) {
@@ -455,7 +457,10 @@ export default {
     },
     ...mapMutations({ // 映射出方法
       setFullScreen: 'SET_FULL_SCREEN', // 播放器状态
-    })
+    }),
+    ...mapActions([
+      'savePlayHistory'
+    ])
   },
   watch: {
     // 检测播放的歌曲

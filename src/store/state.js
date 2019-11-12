@@ -5,12 +5,12 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:04:51
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 10:23:45
+ * @LastEditTime: 2019-11-12 21:46:43
  */
 // vuex 状态
 
 import { playMode } from 'common/js/config'
-import { loadStorage } from 'common/js/cache'
+import { loadStorage, loadPlay } from 'common/js/cache'
 const state = {
   singer: {}, // 歌手信息
   playing: false, // 播放器的播放和暂停
@@ -22,7 +22,8 @@ const state = {
   disc: {}, // 当前被点击的歌单的信息
   topList: {}, // 榜单详情数据
   songMid: 0, // 当前歌曲的编号
-  searchHistory: loadStorage() // 搜索历史,从本地缓存获取
+  searchHistory: loadStorage(), // 搜索历史,从本地缓存获取
+  playHistory: loadPlay() // 播放历史
 }
 
 export default state

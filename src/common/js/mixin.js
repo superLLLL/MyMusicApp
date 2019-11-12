@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-03 19:19:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-11 18:52:21
+ * @LastEditTime: 2019-11-12 22:02:53
  */
 // 多个组件中相同逻辑的js代码，导入到组件中，则同名覆盖，不同名直接用
 // 此为结束scroll底部被mini播放器挡住，导致无法滚动到底部的问题
@@ -112,12 +112,8 @@ export const searchMixin = {
       this.$refs.searchBox.blur()
     },
     // search-box传上来的搜索字符串query
-    onQueryChange(query) { 
+    onQueryChange(query) {
       this.query = query
-    },
-    // 保存到localHistory
-    saveSearch() {
-      this.saveSearchHistory(this.query)
     },
     ...mapActions([
       'saveSearchHistory',
