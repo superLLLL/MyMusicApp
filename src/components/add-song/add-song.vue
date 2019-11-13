@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-11 14:07:36
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 13:00:29
+ * @LastEditTime: 2019-11-13 16:05:24
  -->
  <!-- 歌曲添加到列表的组件 -->
 <template>
@@ -45,6 +45,12 @@
       <div class="search-result" v-show="query">
         <suggest :query="query" :showSinger="showSinger" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
+      <top-tip ref="topTip" @addNumber="addNumber">
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">{{number}}首歌曲添加到播放列表成功</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -58,6 +64,7 @@ import Scroll from 'base/scroll/scroll'
 import { mapGetters, mapActions} from 'vuex'
 import SearchList from 'base/search-list/search-list'
 import SongList from 'base/song-list/song-list'
+import TopTip from 'base/top-tip/top-tip'
 import { createSongAddSong } from 'common/js/song'
 
 export default {
@@ -72,7 +79,10 @@ export default {
         {name: '最近播放'},
         {name: '历史搜索'}
       ],
-      currentIndex: 0
+      // 控制 最近播放/历史播放
+      currentIndex: 0,
+      // 控制添加歌曲的数目
+      number: 0
     }
   },
   computed: {
@@ -95,9 +105,14 @@ export default {
     hide() {
       this.isShow = false
     },
+    // 点击添加歌曲时，显示提示弹窗,分别在suggest和selectSong派发的事件中调用该方法
+    showTopTip() {
+      this.$refs.topTip.show()
+    },
     // 将传上来的搜索记录进行保存在localStorage中
     selectSuggest() {
       this.saveSearch()
+      this.showTopTip()
     },
     switchItem(index) {
       this.currentIndex = index
@@ -109,7 +124,12 @@ export default {
       if (index !== 0) {
         // 因为song不是单纯的数组了，是通过playHistory返回的，其中的每个值都是对象，所以在运行时，会出现错误（无法正常解析），所以通过在song.js中添加方法用于将其格式化
         this.insertSong(createSongAddSong(song))
+        this.showTopTip()
       }
+    },
+    // 添加歌曲数目的变化
+    addNumber(number) {
+      this.number = number
     },
     ...mapActions([
       'insertSong'
@@ -121,7 +141,8 @@ export default {
     Switches,
     Scroll,
     SongList,
-    SearchList
+    SearchList,
+    TopTip
   }
 }
 </script>
