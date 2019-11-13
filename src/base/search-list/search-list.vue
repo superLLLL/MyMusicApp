@@ -5,18 +5,18 @@
  * @Author: Xuhua
  * @Date: 2019-11-09 10:39:21
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-09 15:31:00
+ * @LastEditTime: 2019-11-13 12:21:53
  -->
 <template>
   <div class="search-list" v-show="searches.length">
-    <ul>
-      <li @click="selectItem(item)" class="search-item" v-for="item in searches">
+    <transition-group name="list" tag="ul">
+      <li :key="item" @click="selectItem(item)" class="search-item" v-for="item in searches">
         <span class="text">{{item}}</span>
         <span class="icon" @click.stop="deleteItem(item)">
           <i class="icon-delete"></i>
         </span>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 

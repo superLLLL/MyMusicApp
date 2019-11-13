@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-11 14:07:36
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 22:17:54
+ * @LastEditTime: 2019-11-13 13:00:29
  -->
  <!-- 歌曲添加到列表的组件 -->
 <template>
@@ -20,22 +20,23 @@
       </div>
       
       <div class="search-box-wrapper">
-        <search-box @query="onQueryChange" placeholder="搜索歌曲"></search-box>
+  <!-- 添加ref的原因是因为引入的mixin中的方法需要searchBox的ref，为了避免出错，所以加上。 -->
+        <search-box ref="searchBox" @query="onQueryChange" placeholder="搜索歌曲"></search-box>
       </div>
       <!-- 没有搜索字符串时,显示最近播放和历史搜索 -->
       <div class="shortcut" v-show="!query">
         <switches @switch="switchItem" :switches="switches" :currentIndex="currentIndex"></switches>
         <div class="list-wrapper">
           <!-- 最近播放 -->
-          <scroll class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
+          <scroll ref="playScroll" class="list-scroll" v-if="currentIndex === 0" :data="playHistory">
             <div class="list-inner">
-              <song-list :songs="playHistory"></song-list>
+              <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
-          <!-- 搜索记录 -->
-          <scroll class="list-scroll" v-else="currentIndex === 1" :data="searchHistory">
+          <!-- 搜索记录 以下为复用mixin中的searchHistory、deleteSearchHistory、 setQuery -->
+          <scroll ref="searchScroll" class="list-scroll" v-if="currentIndex === 1" :data="searchHistory">
             <div class="list-inner">
-              <song-list :songs="searchHistory"></song-list>
+              <search-list :searches="searchHistory" @deleteItem="deleteSearchHistory" @selectItem="setQuery"></search-list>
             </div>
           </scroll>
         </div>
@@ -54,8 +55,10 @@ import Suggest from 'components/suggest/suggest'
 import { searchMixin } from 'common/js/mixin'
 import Switches from 'base/switches/switches'
 import Scroll from 'base/scroll/scroll'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions} from 'vuex'
+import SearchList from 'base/search-list/search-list'
 import SongList from 'base/song-list/song-list'
+import { createSongAddSong } from 'common/js/song'
 
 export default {
   mixins: [searchMixin],
@@ -74,13 +77,20 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'playHistory',
-      'searchHistory',
+      'playHistory'
     ])
   },
   methods: {
+    // 本身组件display：none的，所以它的scroll初始化无法获取滚动长度；我们需要在显示的时候，调用其refresh() 方法
     show() {
       this.isShow = true
+      setTimeout(() => {
+        if (this.currentIndex === 0) {
+          this.$refs.playScroll.refresh()
+        } else {
+          this.$refs.searchScroll.refresh()
+        }
+      }, 20);
     },
     hide() {
       this.isShow = false
@@ -91,14 +101,27 @@ export default {
     },
     switchItem(index) {
       this.currentIndex = index
-    }
+    },
+    // 从song-list中通过点击事件，派发上来的事件，携带着song和index
+    selectSong(song, index) {
+      // console.log(song);
+      // console.log(createSongAddSong(song));
+      if (index !== 0) {
+        // 因为song不是单纯的数组了，是通过playHistory返回的，其中的每个值都是对象，所以在运行时，会出现错误（无法正常解析），所以通过在song.js中添加方法用于将其格式化
+        this.insertSong(createSongAddSong(song))
+      }
+    },
+    ...mapActions([
+      'insertSong'
+    ])
   },
   components: {
     SearchBox,
     Suggest,
     Switches,
     Scroll,
-    SongList
+    SongList,
+    SearchList
   }
 }
 </script>

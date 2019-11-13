@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-25 18:11:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 19:55:09
+ * @LastEditTime: 2019-11-13 10:55:38
  */
 
 // 封装一个Song类
@@ -34,7 +34,7 @@ export default class Song { // 创建一个Song对象
           this.lyric = Base64.decode(res.lyric) // Base64解析json数据
           resolve(this.lyric)
         } else {
-          reject( "no lyric" )
+          reject("no lyric")
         }
       })
     })
@@ -55,6 +55,21 @@ export function createSong(musicData, songVkey) {
     // 歌曲播放地址：C400+musicData.file.media_mid 还有一个重要的token数据 v-key
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
     url: `http://127.0.0.1:3000/music/${musicData.file.media_mid}.m4a`
+  })
+}
+export function createSongAddSong(musicData) {
+  return new Song({ // 抽象一层，代码更少
+    id: musicData.id, // 歌的id
+    mid: musicData.mid,
+    // mid: musicData.file.media_mid, // 歌的mid
+    singer: musicData.singer, // 歌手名
+    name: musicData.name, // 歌名
+    album: musicData.album, // 专辑名
+    duration: musicData.duration, // 歌曲时长
+    // 歌曲图片地址：300M000+musicData.album.mid
+    // 歌曲播放地址：C400+musicData.file.media_mid 还有一个重要的token数据 v-key
+    image: musicData.image,
+    url: musicData.url
   })
 }
 

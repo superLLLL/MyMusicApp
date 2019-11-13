@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-26 21:49:54
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-06 13:36:16
+ * @LastEditTime: 2019-11-13 10:39:24
  -->
 <template>
   <div class="song-list">
@@ -55,12 +55,7 @@ export default {
         return index + 1
       }
     }
-  },
-  // watch: {
-  //   songs() {
-  //     console.log(this.songs);
-  //   }
-  // }
+  }
 }
 </script>
 
