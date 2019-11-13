@@ -5,14 +5,14 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:06:26
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 22:01:26
+ * @LastEditTime: 2019-11-13 19:57:42
  */
 // 异步操作/ 对mutations的操作
 // 对一系列的提交做封装
 import * as types from './mutation-types'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
-import { saveSearch, deleteSearch, clearSearch, savePlay } from 'common/js/cache'
+import { saveSearch, deleteSearch, clearSearch, savePlay, saveFavorite, deleteFavorite } from 'common/js/cache'
 
 // 返回song在list中对应的下标
 function findindex(list, song) {
@@ -163,4 +163,13 @@ export const deleteSongList = function ({commit}) {
 // 保存歌曲到playHistory中 （播放历史）
 export const savePlayHistory = function ({commit}, song) {
   commit(types.SET_PLAY_HISTORY, savePlay(song))
+}
+
+// 添加我的喜欢
+export const saveFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, saveFavorite(song))
+}
+// 从我的喜欢中删除
+export const deleteFavoriteList = function ({commit}, song) {
+  commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
 }

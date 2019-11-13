@@ -5,13 +5,14 @@
  * @Author: Xuhua
  * @Date: 2019-11-03 19:19:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 11:09:27
+ * @LastEditTime: 2019-11-13 20:35:43
  */
 // 多个组件中相同逻辑的js代码，导入到组件中，则同名覆盖，不同名直接用
 // 此为结束scroll底部被mini播放器挡住，导致无法滚动到底部的问题
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
+import { deleteFavoriteList } from '../../store/actions'
 
 export const playListMixin = {
   computed: {
@@ -48,7 +49,8 @@ export const playerMixin = {
       'sequenceList',
       'currentSong',
       'playList',
-      'mode'
+      'mode',
+      'favoriteList'
     ])
   },
   methods: {
@@ -76,12 +78,39 @@ export const playerMixin = {
       // 该过程会调用currentSong的watch的回调函数；因为currentSong是通过playList和currentIndex获得的
       this.setCurrentIndex(index)
     },
+    // 显示不同的样式
+    getFavoriteIcon(song) {
+      if (this.isFavorite(song)) {
+        return 'icon-favorite'
+      } else {
+        return 'icon-not-favorite'
+      }
+    },
+    // 从喜欢中保存 or 删除歌曲
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song)
+      } else {
+        this.saveFavoriteList(song)
+      }
+    },
+    // favoriteList中是否包含song
+    isFavorite(song) {
+      let index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id
+      })
+      return index > -1
+    },
     ...mapMutations({
       setPlaying: 'SET_PLAYING', // 播放器播放/暂停
       setCurrentIndex: 'SET_CURRENT_INDEX', // 当前播放歌曲的index
       setMode: 'SET_MODE', // 歌曲的播放模式
       setPlayList: 'SET_PLAY_LIST' // 修改当前歌曲的播放列表
-    })
+    }),
+    ...mapActions([
+      'deleteFavoriteList',
+      'saveFavoriteList'
+    ])
   }
 }
 

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-09 08:45:25
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 21:46:31
+ * @LastEditTime: 2019-11-13 20:37:40
  */
 // storage相关缓存逻辑
 
@@ -14,8 +14,13 @@ import storage from 'good-storage'
 const SEARCH_KEY = '__search__' // 双下划线，与外部冲突很小，一般内部使用
 const MAX_LENGTH = 15 // 历史记录的最大长度
 
+// 最近播放
 const PLAY_KEY = '__play__'
 const PLAY_MAX_LENGTH = 200
+
+// 我的喜欢
+const FAVORITE_KEY = '__FAVORITE__'
+const FAVORITE__MAX_LENGTH = 200
 
 function insertArray(arr, val, compare, maxlen) {
   // findIndex可以使用函数字面量当回调函数使用；这样从外部传来的函数大大提高了函数的复用性
@@ -90,4 +95,26 @@ export function savePlay(song) {
 export function loadPlay() {
   let songs = storage.get(PLAY_KEY, [])
   return songs
+}
+
+export function saveFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  insertArray(songs, song, (item) => {
+    return item.id === song.id
+  }, FAVORITE__MAX_LENGTH)
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+
+export function deleteFavorite(song) {
+  let songs = storage.get(FAVORITE_KEY, [])
+  deleteArray(songs, (item) => {
+    return item.id === song.id
+  })
+  storage.set(FAVORITE_KEY, songs)
+  return songs
+}
+
+export function loadFavorite() {
+  return storage.get(FAVORITE_KEY, [])
 }

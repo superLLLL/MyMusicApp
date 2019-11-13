@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 11:16:27
+ * @LastEditTime: 2019-11-13 20:31:42
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -81,7 +81,7 @@
               <i class="icon-next" @click.prevent="next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon icon-not-favorite"></i>
+              <i class="icon" @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>

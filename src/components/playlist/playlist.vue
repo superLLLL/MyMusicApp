@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-10 12:54:01
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 21:56:42
+ * @LastEditTime: 2019-11-13 20:32:42
  -->
 <template>
   <transition name="list-fade">
@@ -28,7 +28,7 @@
                 <i class="current" :class="currentIconCls(item)"></i>
                 <span class="text">{{item.name}}</span>
                 <span class="like">
-                  <i class="icon-not-favorite"></i>
+                  <i :class="getFavoriteIcon(currentSong)"></i>
                 </span>
                 <span class="delete" @click.stop="deleteOne(item)">
                   <i class="icon-delete"></i>

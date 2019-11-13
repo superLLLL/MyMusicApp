@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-24 16:05:38
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-12 11:09:56
+ * @LastEditTime: 2019-11-13 19:47:21
  */
 // 定义修改操作，mutation就是多个方法的集合
 import * as types from './mutation-types'
@@ -48,6 +48,9 @@ const mutations = {
   },
   [types.SET_PLAY_HISTORY](state, history) {
     state.playHistory = history
+  },
+  [types.SET_FAVORITE_LIST](state, list) {
+    state.favoriteList = list
   }
 }
 
