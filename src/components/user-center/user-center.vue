@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-13 18:04:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 18:42:30
+ * @LastEditTime: 2019-11-14 21:38:50
  -->
 <template>
   <transition name="slide">
@@ -21,6 +21,18 @@
         <span class="text">随机播放全部</span>
       </div>
       <div class="list-wrapper" ref="listWrapper">
+        <!-- 我的喜欢 -->
+        <scroll ref="favoriteScroll" class="list-scroll" v-if="currentIndex === 0" :data="favoriteList">
+          <div class="list-inner">
+            <song-list :songs="favoriteList" @select="selectSong"></song-list>
+          </div>
+        </scroll>
+        <!-- 历史播放 -->
+        <scroll ref="playScroll" class="list-scroll" v-if="currentIndex === 1" :data="playHistory">
+          <div class="list-inner">
+            <song-list :songs="playHistory" @select="selectSong"></song-list>
+          </div>
+        </scroll>
       </div>
     </div>
   </transition>
@@ -28,6 +40,10 @@
 
 <script>
 import Switches from "base/switches/switches"
+import Scroll from 'base/scroll/scroll'
+import SongList from 'base/song-list/song-list'
+import { mapGetters, mapActions} from 'vuex'
+import { createSongAddSong } from 'common/js/song'
 
 export default {
   data() {
@@ -40,16 +56,31 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters([
+      'playHistory',
+      'favoriteList'
+    ])
+  },
   methods: {
     back() {
       this.$router.back()
     },
     switchItem(index) {
       this.currentIndex = index
-    }
+    },
+    // 添加到播放列表
+    selectSong(song) {
+      this.insertSong(new createSongAddSong(song))
+    },
+    ...mapActions([
+      'insertSong'
+    ])
   },
   components:{
-    Switches
+    Switches,
+    Scroll,
+    SongList
   }
 }
 </script>

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-10 12:54:01
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 20:32:42
+ * @LastEditTime: 2019-11-14 21:10:02
  -->
 <template>
   <transition name="list-fade">
@@ -27,8 +27,8 @@
               <li :key="item.id" ref="listItem" class="item" @click="selectItem(item, index)" v-for="(item, index) in sequenceList">
                 <i class="current" :class="currentIconCls(item)"></i>
                 <span class="text">{{item.name}}</span>
-                <span class="like">
-                  <i :class="getFavoriteIcon(currentSong)"></i>
+                <span @click.stop="toggleFavorite(item)" class="like">
+                  <i :class="getFavoriteIcon(item)"></i>
                 </span>
                 <span class="delete" @click.stop="deleteOne(item)">
                   <i class="icon-delete"></i>

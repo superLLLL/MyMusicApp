@@ -5,14 +5,13 @@
  * @Author: Xuhua
  * @Date: 2019-11-03 19:19:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 20:35:43
+ * @LastEditTime: 2019-11-14 21:27:43
  */
 // 多个组件中相同逻辑的js代码，导入到组件中，则同名覆盖，不同名直接用
 // 此为结束scroll底部被mini播放器挡住，导致无法滚动到底部的问题
 import {mapGetters, mapMutations, mapActions} from 'vuex'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
-import { deleteFavoriteList } from '../../store/actions'
 
 export const playListMixin = {
   computed: {
