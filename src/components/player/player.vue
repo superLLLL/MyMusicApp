@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-28 13:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 20:31:42
+ * @LastEditTime: 2019-11-15 10:11:12
  -->
 <!--播放器组件，可以在所有组件中显示，不影响其他组件-->
 <template>
@@ -107,7 +107,7 @@
       </div> 
     </transition>
     <play-list ref="playList"></play-list>
-    <audio :src="currentSong.url" @canplay="canplay" @error="error" ref="audio" @timeupdate="getCurrentTime" @ended="end"></audio>
+    <audio :src="currentSong.url" @play="canplay" @error="error" ref="audio" @timeupdate="getCurrentTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -215,15 +215,19 @@ export default {
     _loop() {
       this.$refs.audio.currentTime = 0 // 将播放事件调整为0
       this.$refs.audio.play() // 重新开始播放
-      this.currentLyric.seek(0) // 歌词也偏移回到歌词开始的位置
+      // 歌词也偏移回到歌词开始的位置
+      if (this.currentLyric) {
+        this.currentLyric.seek(0)
+      }
     },
     // 切换上一首歌
-    prev() {
+    prev() { 
       if (!this.isCanPlay) { // 播放标志位是否为可播放状态
         return
       }
       if (this.playList.length === 1) { // 如果当前歌曲只有一个的时候
         this._loop() // loop这个歌曲
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === -1) { // 如果超出下标
@@ -243,6 +247,7 @@ export default {
       }
       if (this.playList.length === 1) { // 如果当前歌曲只有一个的时候
         this._loop() // loop这个歌曲
+        return 
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -296,7 +301,11 @@ export default {
       }
     },
     getLyric() { // 返回的获取歌词的异步函数
-      this.currentSong.getLyric().then((lyric) => { 
+      this.currentSong.getLyric().then((lyric) => {
+        // 由于歌词请求是个异步请求,快速的切换下，可能导致多次new Lyric，导致歌词就乱了；
+        // if (this.currentSong.lyric !== lyric) {
+        //   return 
+        // }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
          // 如果当前歌曲正在播放状态则播放歌词
         if (this.playing) {
@@ -481,8 +490,10 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
+      // 保证setTimeout只执行一次
+      clearTimeout(this.timer)
       // 使用setTimeout保证从后台切换到前台时，能够正常播放
-      setTimeout(() => { // 将回调函数延迟到下一次DOM更新时调用
+      this.timer = setTimeout(() => { // 将回调函数延迟到下一次DOM更新时调用
         this.$refs.audio.play()
         this.getLyric()
       },1000)

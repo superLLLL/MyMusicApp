@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-13 18:04:55
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-14 21:38:50
+ * @LastEditTime: 2019-11-15 09:20:47
  -->
 <template>
   <transition name="slide">
@@ -16,7 +16,7 @@
       <div class="switches-wrapper">
         <switches @switch="switchItem" :currentIndex="currentIndex" :switches="switches"></switches>
       </div>
-      <div class="play-btn" ref="playBtn">
+      <div class="play-btn" ref="playBtn" @click="random">
         <i class="icon-play"></i>
         <span class="text">随机播放全部</span>
       </div>
@@ -34,6 +34,9 @@
           </div>
         </scroll>
       </div>
+      <div class="no-result-wrapper" v-show="noResult">
+        <no-result :title="noResultDes"></no-result>
+      </div>
     </div>
   </transition>
 </template>
@@ -42,10 +45,13 @@
 import Switches from "base/switches/switches"
 import Scroll from 'base/scroll/scroll'
 import SongList from 'base/song-list/song-list'
+import NoResult from 'base/no-result/no-result' 
 import { mapGetters, mapActions} from 'vuex'
 import { createSongAddSong } from 'common/js/song'
-
+import { playListMixin } from 'common/js/mixin'
+ 
 export default {
+  mixins: [playListMixin],
   data() {
     return {
       // 用于传入switches组件中
@@ -57,12 +63,36 @@ export default {
     }
   },
   computed: {
+    // 在不同列表下的显示/隐藏
+    noResult() {
+      if (this.currentIndex === 0) {
+        return !this.favoriteList.length
+      } else {
+        return !this.playHistory.length
+      }
+    },
+    noResultDes() {
+      if (this.currentIndex === 0) {
+        return '您还未添加收藏歌曲'
+      } else {
+        return '您最近还未曾听歌曲'
+      }
+    },
     ...mapGetters([
       'playHistory',
       'favoriteList'
     ])
   },
   methods: {
+    // 处理scroll被遮挡问题
+    handlePlayList(playlist) {
+      const bottom = playlist.length > 0 ? '60px' : ''
+      this.$refs.listWrapper.style.bottom = bottom
+      // 使用逻辑判断的短路来使其正确的scroll调用到refresh()
+      this.$refs.favoriteScroll && this.$refs.favoriteScroll.refresh()
+      this.$refs.playScroll && this.$refs.playScroll.refresh()
+    },
+    // 回退
     back() {
       this.$router.back()
     },
@@ -71,16 +101,31 @@ export default {
     },
     // 添加到播放列表
     selectSong(song) {
-      this.insertSong(new createSongAddSong(song))
+      this.insertSong(createSongAddSong(song))
+    },
+    // 随机播放功能
+    random() {
+      let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory
+      // 如果localstorage中没歌曲，就返回，以免添加空列表到playList中
+      if (!list.length) {
+        return
+      }
+      // 需要对其进行封装，才能使其，具有getLyric() 的能力
+      list = list.map((song) => {
+        return createSongAddSong(song)
+      })
+      this.randomPlay({list})
     },
     ...mapActions([
-      'insertSong'
+      'insertSong',
+      'randomPlay',
     ])
   },
   components:{
     Switches,
     Scroll,
-    SongList
+    SongList,
+    NoResult
   }
 }
 </script>

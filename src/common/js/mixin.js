@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-11-03 19:19:19
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-14 21:27:43
+ * @LastEditTime: 2019-11-15 08:46:41
  */
 // 多个组件中相同逻辑的js代码，导入到组件中，则同名覆盖，不同名直接用
 // 此为结束scroll底部被mini播放器挡住，导致无法滚动到底部的问题
@@ -31,7 +31,8 @@ export const playListMixin = {
     }
   },
   methods: {
-    handlePlayList() { // 如果导入到的组件没有该事件，则扔出错误
+    // 如果导入到的组件没有该事件，则扔出错误
+    handlePlayList() {
       throw new Error('commponent must implement handlePlayList methods')
     }
   }
