@@ -5,20 +5,36 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-13 18:28:10
+ * @LastEditTime: 2019-11-15 12:54:33
  */
 import Vue from 'vue'
 import Router from 'vue-router'
-import Recommend from 'components/recommend/recommend'
-import Rank from 'components/rank/rank'
-import Search from 'components/search/search'
-import Singer from 'components/singer/singer'
-import SingerDetail from 'components/singer-detail/singer-detail'
-import Disc from 'components/disc/disc'
-import TopList from 'components/top-list/top-list'
-import UserCenter from 'components/user-center/user-center'
+// import Recommend from 'components/recommend/recommend'
+// import Rank from 'components/rank/rank'
+// import Search from 'components/search/search'
+// import Singer from 'components/singer/singer'
+// import SingerDetail from 'components/singer-detail/singer-detail'
+// import Disc from 'components/disc/disc'
+// import TopList from 'components/top-list/top-list'
+// import UserCenter from 'components/user-center/user-center'
 
 Vue.use(Router)
+
+// 路由懒加载
+// const Recommend = (resolve) => {
+//   import('components/recommend/recommend').then((module) => {
+//     resolve(module)
+//   })
+// }
+
+const Recommend = () => import(/* webpackChunkName: Recommend */ 'components/recommend/recommend')
+const Rank = () => import(/* webpackChunkName: Rank */ 'components/rank/rank')
+const Search = () => import(/* webpackChunkName: Search */ 'components/search/search')
+const Singer = () => import(/* webpackChunkName: Singer */ 'components/singer/singer')
+const SingerDetail = () => import(/* webpackChunkName: SingerDetail */ 'components/singer-detail/singer-detail')
+const Disc = () => import(/* webpackChunkName: Disc */ 'components/disc/disc')
+const TopList = () => import(/* webpackChunkName: TopList */ 'components/top-list/top-list')
+const UserCenter = () => import(/* webpackChunkName: UserCenter */ 'components/user-center/user-center')
 
 export default new Router({
   routes: [
