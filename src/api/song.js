@@ -20,7 +20,6 @@ export function getLyric(mid) {
     pcachetime: +new Date(), // 时间戳
     songmid: mid,
     g_tk: 687381041,
-    loginUin: 1729792587,
     hostUin: 0,
     format: 'json',
     platform: 'yqq.json',
@@ -37,12 +36,11 @@ export function getLyric(mid) {
 // 歌曲的vkey实时请求
 export function getSongVkey(songmid) {
   const url = '/api/getSongVkey'
+  let json = `{"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"1655946504","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"1655946504","songmid":["${songmid}"],"songtype":[0],"uin":"1729792587","loginflag":1,"platform":"20"}},"comm":{"uin":1729792587,"format":"json","ct":24,"cv":0}}`
 
-  let json = `{"req":{"module":"CDN.SrfCdnDispatchServer","method":"GetCdnDispatch","param":{"guid":"3110397877","calltype":0,"userip":""}},"req_0":{"module":"vkey.GetVkeyServer","method":"CgiGetVkey","param":{"guid":"3110397877","songmid":["0000HxwU1V81tL"],"songtype":[0],"uin":"1729792587","loginflag":1,"platform":"20"}},"comm":{"uin":1729792587,"format":"json","ct":24,"cv":0}}`
   const data = Object.assign({}, commonParams, {
-    '-': 'getplaysongvkey4909493728860954',
+    // '-': 'getplaysongvkey4909493728860954',
     g_tk: 5381,
-    loginUin: 1729792587,
     hostUin: 0,
     format: 'json',
     inCharset: 'utf8',
@@ -50,7 +48,7 @@ export function getSongVkey(songmid) {
     notice: 0,
     platform: 'yqq.json',
     needNewCode: 0,
-    data: encodeURIComponent(json)
+    data: json
   })
   return axios.get(url, {
     params: data

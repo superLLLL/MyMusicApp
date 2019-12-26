@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:47:32
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-19 09:47:51
+ * @LastEditTime: 2019-10-29 21:00:05
  */
 'use strict'
 const path = require('path')
@@ -36,6 +36,8 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    //新增chunFilename属性
+    chunkFilename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath

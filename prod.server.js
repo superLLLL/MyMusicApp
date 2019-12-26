@@ -14,7 +14,19 @@ var axios = require('axios')
 
 var app = express()
 
+var apiRoutes = express.Router()
+
 app.use(express.static('./dist'))
+// 设置跨越
+
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", ' 3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
+});
 
 app.get('/api/getDiscList', function(req, res){  // 歌单数据代理请求
   // let url = 'https://v1.itooi.cn/tencent/songList/hot'
@@ -202,6 +214,8 @@ app.get('/api/search', function(req, res) {
     console.log(e);
   })
 })
+
+app.use('/api', apiRoutes)
 
 var port = process.env.PORT || config.build.port
 module.exports = app.listen(port, (err) => {

@@ -133,7 +133,8 @@
         blur = Math.min(20 * percent , 20) // 最大只取到20
       }
       
-      // 感觉这个backdropFilter没有什么能兼容呢？
+      // backdropFilter的兼容性较差
+      // console.log(blur)
       this.$refs.filter.style[backdropFilter] = `blur(${blur}px)`
       // this.$refs.filter.style.filter = `blur(${blur}px)`
 
@@ -142,6 +143,7 @@
         this.$refs.bgImg.style.paddingTop = 0
         this.$refs.bgImg.style.height = RESERVED_HEIGHT +'px'
         this.$refs.playButton.style.display = 'none' // 滚动到顶部时，将button隐藏
+        // 滚动到顶部，背景会被全部覆盖，需要z-index来显示出来
         zIndex = 10
       }else{ // 没过时就恢复
         this.$refs.bgImg.style.paddingTop = '70%'

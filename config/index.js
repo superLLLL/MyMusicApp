@@ -1,3 +1,12 @@
+/*
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-18 10:47:32
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-11-15 18:13:19
+ */
 'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -13,7 +22,7 @@ module.exports = {
     proxyTable: {},
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
+    host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -45,13 +54,13 @@ module.exports = {
 
   build: {
     // Template for index.html
+    port: 9000,
     index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-
+    assetsPublicPath: './',
     /**
      * Source Maps
      */

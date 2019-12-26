@@ -9,7 +9,7 @@
  */
 
 // 封装一个Song类
-import { getLyric } from 'api/song' // 歌词请求
+import { getLyric, getSongVkey} from 'api/song' // 歌词请求
 import { ERR_OK } from 'api/config'
 import { Base64 } from 'js-base64'
 
@@ -23,6 +23,20 @@ export default class Song { // 创建一个Song对象
     this.duration = duration
     this.image = image
     this.url = url
+  }
+
+  getSongVkey() {
+    if (this.songKey) {
+      return Promise().resolve(this.songKey)
+    }
+    return new Promise ((resolve, reject) => {
+      getSongVkey(this.mid).then((res) => {
+        if (res.code === ERR_OK) {
+          console.log(res)
+          // this.songKey = res.req.data.
+        }
+      })
+    })
   }
   getLyric() { // 将获取歌词方法封装在song中，不在构造函数中，而是作为公共方法
     if (this.lyric) { // 如果有歌词的就不在重新请求了，返回promise对象
@@ -42,7 +56,7 @@ export default class Song { // 创建一个Song对象
 }
 // 工厂方法就是不直接调用new，而是返回一个方法来创建对象
 // 扩展工厂方法创建实例, 以便方法复用   songid和ablum是必须要的
-export function createSong(musicData, songVkey) {
+export function createSong(musicData) {
   return new Song({ // 抽象一层，代码更少
     id: musicData.ksong.id, // 歌的id
     mid: musicData.mid,
@@ -54,7 +68,8 @@ export function createSong(musicData, songVkey) {
     // 歌曲图片地址：300M000+musicData.album.mid
     // 歌曲播放地址：C400+musicData.file.media_mid 还有一个重要的token数据 v-key
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.album.mid}.jpg?max_age=2592000`,
-    url: `http://127.0.0.1:3000/music/${musicData.file.media_mid}.m4a`
+    // url: `http://isure.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?${songkey}`
+    url: `http://isure.stream.qqmusic.qq.com/C400${musicData.mid}.m4a?guid=1655946504&vkey=7F17DD5D8E3F28CFD7C3BAE2E6A043430E36542DEEB8B86F7351206B7E2590B0A291763A227EAEE8F05A2F7B534EC7BC8F79EAFFF72FD156&uin=2635&fromtag=66`
   })
 }
 export function createSongAddSong(musicData) {

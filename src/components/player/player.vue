@@ -50,7 +50,8 @@
                 <p ref="lyricLine"
                     class="text"
                     :class="{'current' : currentLineNum === index}"
-                    v-for="(line, index) in currentLyric.lines">{{line.txt}}</p>
+                    v-for="(line, index) in currentLyric.lines"
+                    :key="index">{{line.txt}}</p>
               </div>
             </div>
           </scroll>
@@ -121,7 +122,6 @@ import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
-import { getSongVkey } from 'api/song'
 import { ERR_OK } from 'api/config'
 import PlayList from 'components/playlist/playlist'
 import { playerMixin } from 'common/js/mixin'
@@ -175,13 +175,6 @@ export default {
     ]),
   },
   methods: {
-    // _getSongVkey(){
-    //   getSongVkey(this.songMid).then((res) => {
-    //     if (res.code === ERR_OK) {
-    //       console.log(res);
-    //     }
-    //   })
-    // },
     // 收起播放器
     Shrink() {
       this.setFullScreen(false)
@@ -299,6 +292,12 @@ export default {
         // 歌词跳转到当前歌曲播放时间的位置，单位ms
         this.currentLyric.seek(currentTime * 1000)
       }
+    },
+    // 获取歌曲key值
+    getSongVkey() {
+      this.currentSong.getSongVkey().then((res) => {
+        // console.log(res)
+      })
     },
     getLyric() { // 返回的获取歌词的异步函数
       this.currentSong.getLyric().then((lyric) => {
@@ -495,6 +494,7 @@ export default {
       // 使用setTimeout保证从后台切换到前台时，能够正常播放
       this.timer = setTimeout(() => { // 将回调函数延迟到下一次DOM更新时调用
         this.$refs.audio.play()
+        this.getSongVkey()
         this.getLyric()
       },1000)
     },
@@ -754,10 +754,12 @@ export default {
           no-wrap()
           font-size: $font-size-small
           color: $color-text-d
+      // 将两个控件一起控制
       .control
         flex: 0 0 30px
         width: 30px
         padding: 0 10px
+        // overflow: hidden
         .icon-play-mini, .icon-pause-mini, .icon-playlist
           font-size: 30px
           color: $color-theme-d
@@ -767,7 +769,7 @@ export default {
           position: absolute
           left: 0
           // 不同浏览器的设置不同
-          top: 2px
+          top: .06rem
   @keyframes rotate
     0%
       transform: rotate(0)

@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-20 20:04:04
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-11-08 12:10:36
+ * @LastEditTime: 2019-11-15 18:29:37
  */
 
 //  获取歌手名单 使用代理
@@ -39,11 +39,9 @@ export function getSingerList() {
 
 // 歌手详情
 export function getSingerDetail(singermid) {
-
   let json = `{"comm":{"ct":24,"cv":0},"singerSongList":{"method":"GetSingerSongList","param":{"order":1,"singerMid":"${singermid}","begin":0,"num":10},"module":"musichall.song_list_server"}}`
 
   const url = '/api/getSingerDetail'
-  // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
   const data = Object.assign({}, commonParams, {
     // '-': id[SingerId].info,
     g_tk: 5381,
@@ -53,10 +51,9 @@ export function getSingerDetail(singermid) {
     notice: 0,
     platform: 'yqq.json',
     needNewCode: 0,
-    data: encodeURIComponent(json)
+    data: json
   })
 
-  // return jsonp(url, data, options)
   return axios.get(url, {
     params: data
   }).then((res) => {

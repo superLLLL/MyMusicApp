@@ -1,9 +1,21 @@
+<!--
+ * @Description: Vue2.0-music-app
+ * @Email: 17625121225@163.com
+ * @Company: root
+ * @Author: Xuhua
+ * @Date: 2019-10-18 10:47:32
+ * @LastEditors: Xuhua
+ * @LastEditTime: 2019-10-26 10:29:14
+ -->
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=0">
     <title>vue-music</title>
+    <!--引入qq音乐视频播放器api-->
+    <script src="//y.gtimg.cn/music/h5/player/player.js?max_age=2592000"></script>
+    <script type="text/javascript">(function (w) {w.frontjsConfig = {token: "88aaf0c1df80f5fbc6783451054470a2", behaviour: 15, optimisedForSPA: true, useHistory: true};w.frontjsTmpData = {r:[],e:[],l:[]};w.frontjsTmpCollector = function (ev) {(ev.message ? window.frontjsTmpData.e : window.frontjsTmpData.r).push([new Date().getTime(), ev])};w.FrontJS = {addEventListener: function (t, f) {w.frontjsTmpData.l.push([t, f]);return f;},removeEventListener: function (t, f) {for (var i = 0; i < w.frontjsTmpData.l.length; i++) {t === w.frontjsTmpData.l[i][0] && f === w.frontjsTmpData.l[i][1] && w.frontjsTmpData.l.splice(i, 1);}return f;}};w.document.addEventListener("error", w.frontjsTmpCollector, true);w.addEventListener("error", w.frontjsTmpCollector, true);w.addEventListener("load", function () {var n = w.document.createElement("script");n.src = "https://static.frontjs.com/dist/current/tracker.min.js"; w.document.body.appendChild(n);}, true);})(window);</script>
   </head>
   <body>
     <div id="app"></div>

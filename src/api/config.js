@@ -15,7 +15,7 @@ export const commonParams = {
   outCharset: 'utf-8',
   notice: 0,
   format: 'jsonp',
-  uin: '1729792587',
+  loginUin: 1729792587,
   hostUin: 0,
   needNewCode: 0
 }

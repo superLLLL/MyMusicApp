@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 15:56:00
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-18 16:33:35
+ * @LastEditTime: 2019-11-15 19:39:41
  -->
 <template>
     <div class="tab">
@@ -41,6 +41,7 @@ export default {}
             .tab-link
                 padding-bottom: 5px
                 color: $color-text-1
+            // 突出当前被访问的link-view
             &.router-link-active
                 .tab-link
                     color: $color-theme

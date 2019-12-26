@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:55:16
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-21 15:24:55
+ * @LastEditTime: 2019-11-15 19:53:38
  */
 
 // jsonp跨越请求
@@ -30,6 +30,6 @@ export function param(data) {
     let value = data[key] !== undefined ? data[key] : ''
     url += `&${key}=${encodeURIComponent(value)}`
   }
-
-  return url ? url.substring(1) : '' // 去&字符或直接返回一个空值
+  // 去除第一个'&'字符或直接返回一个空值
+  return url ? url.substring(1) : ''
 }

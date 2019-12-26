@@ -5,7 +5,7 @@
  * @Author: Xuhua
  * @Date: 2019-10-18 10:17:47
  * @LastEditors: Xuhua
- * @LastEditTime: 2019-10-26 14:17:47
+ * @LastEditTime: 2019-11-15 20:52:15
  -->
 
 <!--推荐图片左右轮播图-->
@@ -19,7 +19,7 @@
       </slot>
     </div>
     <div class="dots">
-      <span class="dot" v-for="(item, index) in dots" :class="{active : currentPageIndex === index}"></span>
+      <span class="dot" v-for="(item, index) in dots" :class="{active : currentPageIndex === index}" :key="index"></span>
     </div>
   </div>
 </template>
@@ -52,45 +52,51 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {  //设置轮播图宽度
+    //设置20毫秒延迟，浏览器刷新时间为17ms
+    setTimeout(() => {
+      //设置轮播图宽度
       this._setSliderWidth()
       this._initSlider()
       this._initDots()
       if (this.autoPlay){
         this._play()
       }
-    }, 20);  //设置20毫秒延迟，浏览器刷新时间为17ms
-
-    window.addEventListener('resize', () => {  //监听页面大小，实现响应式
-      if (!this.scroll) { //当轮播图未初始化时，即还未实际调用 setSliderWidth()
+    }, 20);
+    //窗口改变事件
+    window.addEventListener('resize', () => {
+      //当轮播图未初始化时，即还未实际调用 setSliderWidth()
+      if (!this.scroll) {
         return 
       }
-      this._setSliderWidth(true) 
+      this._setSliderWidth(true)
     })
   },
   methods: {
-    _setSliderWidth(isResize){  //初始化宽度; 参数控制仅通过setTimeout调用时，才需要加上双倍轮播图大小
-      this.children = this.$refs.sliderGroup.children //获取到传入的图片(Array)
-      // console.log(this.children);
+    //初始化宽度; 参数控制仅通过setTimeout调用时，才需要加上双倍轮播图大小
+    _setSliderWidth(isResize){ // 如果是通过resize事件来的，则不再将width += 2*sliderwidth
+      this.children = this.$refs.sliderGroup.children
       let width = 0
-      let sliderwidth = this.$refs.slider.clientWidth  //获取浏览器宽度
+      //获取浏览器宽度
+      let sliderwidth = this.$refs.slider.clientWidth
       for (let i = 0; i < this.children.length; i++) {
         let child = this.children[i]
+        // 为每个child添加类名
         addClass(child, 'slider-item')
 
         child.style.width = sliderwidth + 'px'    //为图片dom对象，设置宽度
         width += sliderwidth                      // 得到总宽度
       }
 
-
-      if(this.loop && !isResize){  //因为better-scroll的机制，如果循环，需要多设置两个宽度
+      //因为better-scroll的机制，如果循环，需要多设置两个宽度
+      if(this.loop && !isResize){
         width += 2 * sliderwidth
       }
-      this.$refs.sliderGroup.style.width = width + 'px' //为slider dom设置总宽度
+      //为slider dom设置总宽度
+      this.$refs.sliderGroup.style.width = width + 'px'
       // console.log(this.$refs.sliderGroup.offsetWidth);
     },
-    
-    _initSlider(){  //初始化轮播图
+    //初始化轮播图
+    _initSlider(){
       let vm = this;
       // 实例化scroll
       this.scroll = new BScroll(this.$refs.slider, {
@@ -103,7 +109,9 @@ export default {
               speed: 400 // 轮播间隔
           }
       })
+      // scrollEnd是当前滚动结束，就调用
       this.scroll.on('scrollEnd', () => {
+          // 获得当前滚动到的个数，赋给currentPageIndex以实现样式变化
           let pageIndex = this.scroll.getCurrentPage().pageX;
           this.currentPageIndex = pageIndex;
           if(this.autoPlay) {
@@ -119,9 +127,11 @@ export default {
       // })
 
     },
-    _initDots(){  //初始化点
+    //初始化点
+    _initDots(){
       this.dots = new Array(this.children.length -2)
     },
+    // 修改到下一张幻灯片
     _play() {
         let pageIndex = this.currentPageIndex + 1
         this.timer = setTimeout(() => {
@@ -129,8 +139,9 @@ export default {
         }, this.interval)
       }
   },
+  //手动清除计时器
   destroyed() {
-    clearTimeout(this.timer) //手动清除计时器
+    clearTimeout(this.timer)
   }
 }
 </script>

@@ -60,7 +60,8 @@ export default {
     },
     progressChange(e) { // 点击修改播放位置
       const rect = this.$refs.progressBar.getBoundingClientRect() // btn到进度条初始位置的偏移量
-      const offsetWidth = e.pageX - rect.left 
+      const offsetWidth = e.pageX - rect.left
+      // console.log(offsetWidth)
       this._setWidth(offsetWidth)
     // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
       // this._setWidth(e.offsetX) // 修改进度条位置
@@ -71,8 +72,9 @@ export default {
       this.$emit('percentChange', percent)
     },
     _setWidth(offsetWidth) { // 函数封装 随着播放的时间的增加，进度条进度也增加
-        this.$refs.progress.style.width = `${offsetWidth}px`
-        this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
+      // console.log(offsetWidth)
+      this.$refs.progress.style.width = `${offsetWidth}px`
+      this.$refs.progressBtn.style[transform] = `translate3d(${offsetWidth}px,0,0)`
     }
   },
   watch: {
